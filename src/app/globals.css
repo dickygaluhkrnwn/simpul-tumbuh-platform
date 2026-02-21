@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* --- CUSTOM FONTS --- */
+  --font-sans: var(--font-sans);
+  --font-uii: var(--font-uii);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* --- MODERN UII COLOR PALETTE (Futuristic Tech) --- */
+  
+  /* Primary Blues - Lebih dalam dan digital */
+  --color-uii-blue-50: #f0f7ff;
+  --color-uii-blue-100: #e0f0ff;
+  --color-uii-blue-200: #b9ddfe;
+  --color-uii-blue-300: #7cc2fd;
+  --color-uii-blue-400: #36a4fa;
+  --color-uii-blue-500: #0c87eb;
+  --color-uii-blue-600: #0069c9; /* Brand Primary */
+  --color-uii-blue-700: #0054a3;
+  --color-uii-blue-800: #00488a;
+  --color-uii-blue-900: #003d73; /* Deep Foundation */
+  --color-uii-blue-950: #00264d; /* Darkest Navy */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Accent Yellows - Lebih electric/glowing */
+  --color-uii-yellow-300: #fde047;
+  --color-uii-yellow-400: #facc15;
+  --color-uii-yellow-500: #eab308; /* Brand Accent */
+  --color-uii-yellow-600: #ca8a04;
+
+  /* Modern Neutrals - Slate with a hint of blue */
+  --color-slate-850: #172033; /* Darker than 800, lighter than 900 */
+  --color-slate-925: #0a101f; /* Deep background */
+
+  /* --- ANIMATIONS --- */
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-pulse-slow: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.1;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }
 
+/* --- BASE STYLES --- */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-uii-blue-50); /* Light/Clean base */
+  color: var(--color-slate-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent horizontal scroll from background blobs */
+}
+
+/* --- UTILITIES --- */
+
+/* Glassmorphism Effect - Kunci tampilan modern */
+@utility glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@utility glass-dark {
+  background: rgba(15, 36, 57, 0.6); /* Based on UII Blue 950 */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= --theme-screens-sm) { padding-inline: 1.5rem; }
+  @media (width >= --theme-screens-md) { padding-inline: 2rem; }
+  @media (width >= --theme-screens-xl) { max-width: 1280px; }
+}
+
+/* Text Gradients */
+@utility text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-uii-yellow-400), var(--color-uii-yellow-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility text-gradient-blue {
+  background: linear-gradient(135deg, var(--color-uii-blue-400), var(--color-uii-blue-600));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
