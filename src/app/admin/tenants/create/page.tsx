@@ -6,7 +6,8 @@ import { createTenant } from "@/lib/firestore/tenants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Building2, Settings } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CreateTenantPage() {
   const router = useRouter();
@@ -48,75 +49,133 @@ export default function CreateTenantPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-          <ArrowLeft size={20} className="text-slate-600" />
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-5xl mx-auto space-y-6 pb-20 font-sans"
+    >
+      {/* HEADER PAGE */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+        <button onClick={() => router.back()} className="p-3 bg-slate-100 dark:bg-slate-800 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl transition-all w-max">
+          <ArrowLeft size={20} />
         </button>
-        <h1 className="text-2xl font-bold text-slate-900 font-uii">Tambah Startup Binaan</h1>
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white font-uii">Tambah Startup Binaan</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-sm mt-1">Masukkan data startup baru ke dalam ekosistem IBISMA UII.</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="md:col-span-2">
-             <ImageUpload label="Logo Startup" folder="tenants" onImageUploaded={handleImageUploaded} currentImage={formData.logo} />
-          </div>
+        {/* Kolom Kiri: Form Utama */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+            
+            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="w-10 h-10 rounded-xl bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 flex items-center justify-center">
+                <Building2 size={20} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white">Profil Startup</h3>
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Nama Startup</label>
-            <Input required name="name" value={formData.name} onChange={handleChange} placeholder="Contoh: GoJek KW" />
-          </div>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Startup</label>
+                <Input required name="name" placeholder="Contoh: GoJek KW" value={formData.name} onChange={handleChange} />
+              </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Kategori</label>
-            <select name="category" className="w-full h-10 px-3 rounded-lg border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-purple-500 outline-none" value={formData.category} onChange={handleChange}>
-              <option value="Teknologi">Teknologi</option>
-              <option value="F&B">F&B (Makanan)</option>
-              <option value="Jasa">Jasa</option>
-              <option value="Kreatif">Kreatif</option>
-              <option value="Agro">Agro</option>
-              <option value="Lainnya">Lainnya</option>
-            </select>
-          </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Deskripsi Singkat</label>
+                <textarea 
+                  name="description" 
+                  required 
+                  rows={4} 
+                  placeholder="Solusi apa yang ditawarkan?"
+                  className="w-full p-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                  value={formData.description} 
+                  onChange={handleChange} 
+                />
+              </div>
 
-          <div className="md:col-span-2 space-y-2">
-            <label className="text-sm font-medium text-slate-700">Deskripsi Singkat</label>
-            <textarea name="description" required rows={3} className="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Solusi apa yang ditawarkan?" value={formData.description} onChange={handleChange} />
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Founder</label>
+                  <Input required name="founder" placeholder="Nama Ketua Tim" value={formData.founder} onChange={handleChange} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Website (Opsional)</label>
+                  <Input name="website" value={formData.website} onChange={handleChange} placeholder="https://..." />
+                </div>
+              </div>
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Nama Founder</label>
-            <Input required name="founder" value={formData.founder} onChange={handleChange} placeholder="Nama Ketua Tim" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Batch / Angkatan</label>
-            <Input required name="batch" value={formData.batch} onChange={handleChange} placeholder="Batch 5 - 2025" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Status Inkubasi</label>
-            <select name="status" className="w-full h-10 px-3 rounded-lg border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-purple-500 outline-none" value={formData.status} onChange={handleChange}>
-              <option value="Pra-Inkubasi">Pra-Inkubasi</option>
-              <option value="Inkubasi">Inkubasi (Active)</option>
-              <option value="Lulus (Alumni)">Lulus (Alumni)</option>
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Website (Opsional)</label>
-            <Input name="website" value={formData.website} onChange={handleChange} placeholder="https://..." />
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
-          <Button type="submit" className="bg-purple-600 hover:bg-purple-700 w-full md:w-auto gap-2" isLoading={loading}>
-            <Save size={18} /> Simpan Data
-          </Button>
+        {/* Kolom Kanan: Sidebar Form */}
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm space-y-8 sticky top-24">
+            
+            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                <Settings size={20} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 dark:text-white">Pengaturan</h3>
+            </div>
+
+            <ImageUpload 
+              label="Logo Startup" 
+              folder="tenants" 
+              onImageUploaded={handleImageUploaded} 
+              currentImage={formData.logo} 
+            />
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kategori Bidang</label>
+              <select 
+                name="category" 
+                className="w-full h-11 px-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                value={formData.category} 
+                onChange={handleChange}
+              >
+                <option value="Teknologi">Teknologi</option>
+                <option value="F&B">F&B (Makanan)</option>
+                <option value="Jasa">Jasa</option>
+                <option value="Kreatif">Kreatif</option>
+                <option value="Agro">Agro</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Batch / Angkatan</label>
+              <Input required name="batch" value={formData.batch} onChange={handleChange} placeholder="Contoh: Batch 5 - 2025" />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status Inkubasi</label>
+              <select 
+                name="status" 
+                className="w-full h-11 px-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                value={formData.status} 
+                onChange={handleChange}
+              >
+                <option value="Pra-Inkubasi">Pra-Inkubasi</option>
+                <option value="Inkubasi">Inkubasi (Active)</option>
+                <option value="Lulus (Alumni)">Lulus (Alumni)</option>
+              </select>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+              <Button type="submit" variant="primary" className="w-full h-12 gap-2 shadow-lg" isLoading={loading}>
+                <Save size={18} /> Simpan Startup
+              </Button>
+            </div>
+
+          </div>
         </div>
 
       </form>
-    </div>
+    </motion.div>
   );
 }

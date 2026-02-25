@@ -27,8 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body className={`${fontSans.variable} ${fontUII.variable} antialiased font-sans bg-slate-50 text-slate-900`}>
+    // Tambahkan scroll-smooth agar navigasi anchor link (seperti href="#apply") mulus
+    <html lang="id" className="scroll-smooth">
+      <body 
+        className={`${fontSans.variable} ${fontUII.variable} antialiased font-sans bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300`}
+      >
         <AuthProvider>
           {children}
           <GeminiChat /> {/* Pasang widget di sini agar global */}

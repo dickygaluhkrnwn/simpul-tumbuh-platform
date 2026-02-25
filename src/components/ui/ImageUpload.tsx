@@ -4,11 +4,12 @@ import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Image as ImageIcon, UploadCloud, X, Loader2 } from "lucide-react";
 import { uploadImage } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 
 interface ImageUploadProps {
-  currentImage?: string; // URL gambar saat ini (untuk edit)
-  onImageUploaded: (url: string) => void; // Callback saat sukses
-  folder?: string; // Folder tujuan (misal: "news", "events")
+  currentImage?: string; 
+  onImageUploaded: (url: string) => void; 
+  folder?: string; 
   label?: string;
 }
 
@@ -26,11 +27,9 @@ export function ImageUpload({
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Buat preview lokal langsung (biar UX cepat)
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
 
-      // Otomatis upload saat file dipilih
       await handleUpload(file);
     }
   };
@@ -39,10 +38,10 @@ export function ImageUpload({
     setIsUploading(true);
     try {
       const url = await uploadImage(file, folder);
-      onImageUploaded(url); // Kirim URL hasil upload ke parent form
+      onImageUploaded(url); 
     } catch (error) {
       alert("Gagal mengupload gambar.");
-      setPreview(currentImage || null); // Revert jika gagal
+      setPreview(currentImage || null); 
     } finally {
       setIsUploading(false);
     }
@@ -50,17 +49,26 @@ export function ImageUpload({
 
   const handleRemove = () => {
     setPreview(null);
-    onImageUploaded(""); // Reset URL di parent
+    onImageUploaded(""); 
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium text-slate-700 block">{label}</label>
+    <div className="space-y-3 font-sans">
+      <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+        {label}
+      </label>
       
-      <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 bg-slate-50 hover:bg-slate-100 transition-colors text-center relative group">
+      <div 
+        className={cn(
+          "border-2 border-dashed rounded-2xl p-4 text-center relative group transition-all duration-300",
+          preview 
+            ? "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" 
+            : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-primary-400 cursor-pointer"
+        )}
+        onClick={() => !preview && fileInputRef.current?.click()}
+      >
         
-        {/* Input File Tersembunyi */}
         <input 
           type="file" 
           ref={fileInputRef}
@@ -70,43 +78,38 @@ export function ImageUpload({
         />
 
         {preview ? (
-          <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden bg-slate-200">
-            {/* Image Preview */}
+          <div className="relative w-full h-48 md:h-56 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <img 
               src={preview} 
               alt="Preview" 
-              className={`w-full h-full object-cover transition-opacity ${isUploading ? 'opacity-50' : 'opacity-100'}`} 
+              className={`w-full h-full object-cover transition-opacity duration-300 ${isUploading ? 'opacity-40 blur-sm' : 'opacity-100'}`} 
             />
             
-            {/* Loading Indicator */}
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center text-white">
-                <Loader2 className="animate-spin w-8 h-8" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-900 dark:text-white bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm">
+                <Loader2 className="animate-spin w-8 h-8 text-primary-500 mb-2" />
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300">Mengunggah...</span>
               </div>
             )}
 
-            {/* Remove Button */}
             {!isUploading && (
               <button 
                 type="button"
                 onClick={handleRemove}
-                className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-full shadow-md hover:bg-red-700 transition-colors opacity-0 group-hover:opacity-100"
+                className="absolute top-3 right-3 bg-slate-900/60 hover:bg-rose-600 text-white p-2 rounded-xl backdrop-blur-md shadow-lg transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+                title="Hapus Gambar"
               >
                 <X size={16} />
               </button>
             )}
           </div>
         ) : (
-          /* Placeholder State */
-          <div 
-            className="flex flex-col items-center justify-center py-8 cursor-pointer"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-slate-400 mb-3 group-hover:scale-110 transition-transform">
-              <UploadCloud size={24} />
+          <div className="flex flex-col items-center justify-center py-10">
+            <div className="w-14 h-14 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 mb-4 group-hover:scale-110 group-hover:text-primary-500 group-hover:border-primary-500/50 transition-all duration-300">
+              <UploadCloud size={28} />
             </div>
-            <p className="text-sm font-medium text-slate-600">Klik untuk upload gambar</p>
-            <p className="text-xs text-slate-400 mt-1">JPG, PNG maksimal 2MB</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Klik untuk memilih gambar</p>
+            <p className="text-xs font-medium text-slate-400">Format JPG atau PNG (Maks. 2MB)</p>
           </div>
         )}
       </div>

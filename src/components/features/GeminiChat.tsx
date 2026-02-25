@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Zap, Send, X, MessageCircle, Minimize2, Loader2, Sparkles } from "lucide-react";
+import { Send, X, MessageCircle, Minimize2, Loader2, Sparkles, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -15,7 +15,7 @@ interface Message {
 export default function GeminiChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: "1", role: "ai", content: "Halo! 👋 Saya Simpul AI. Ada yang bisa saya bantu terkait event, startup, atau program UII hari ini?" }
+    { id: "1", role: "ai", content: "Halo! 👋 Saya Simpul AI. Ada yang bisa saya bantu terkait event, startup, atau program inovasi hari ini?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function GeminiChat() {
   // Auto scroll ke bawah
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isLoading]);
 
   const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -42,7 +42,7 @@ export default function GeminiChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           message: userMsg.content,
-          history: messages.slice(-6) // Kirim 6 pesan terakhir sebagai konteks percakapan
+          history: messages.slice(-6) // Kirim 6 pesan terakhir sebagai konteks
         }),
       });
 
@@ -63,90 +63,93 @@ export default function GeminiChat() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end font-sans">
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95, transformOrigin: "bottom right" }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="mb-4 w-[350px] md:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden"
+            transition={{ duration: 0.3, type: "spring", bounce: 0.4 }}
+            className="mb-6 w-[350px] md:w-[400px] h-[550px] bg-white dark:bg-slate-900 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden relative"
           >
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
+
             {/* Header */}
-            <div className="bg-uii-blue-900 p-4 flex justify-between items-center text-white">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-uii-blue-700 rounded-full flex items-center justify-center border border-white/20">
-                  <Sparkles size={16} className="text-uii-yellow-400" />
+            <div className="bg-slate-950 p-5 flex justify-between items-center text-white relative z-10 border-b border-slate-800 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center border border-white/10 shadow-inner">
+                  <Bot size={20} className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Simpul AI Assistant</h3>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                    <span className="text-[10px] text-uii-blue-200">Online & Siap</span>
+                  <h3 className="font-bold text-sm tracking-wide">Simpul AI Assistant</h3>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+                    <span className="text-[10px] text-slate-300 font-medium uppercase tracking-widest">Online & Siap</span>
                   </div>
                 </div>
               </div>
-              <div className="flex gap-1">
-                <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-white/10 rounded-lg text-white/80 hover:text-white transition-colors">
-                  <Minimize2 size={18} />
-                </button>
-              </div>
+              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white transition-colors">
+                <Minimize2 size={18} />
+              </button>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4">
+            <div className="flex-1 p-5 overflow-y-auto bg-slate-50 dark:bg-slate-950/50 space-y-5 custom-scrollbar relative z-10">
               {messages.map((msg) => (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   key={msg.id}
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
+                    className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed shadow-sm font-medium ${
                       msg.role === "user"
-                        ? "bg-uii-blue-600 text-white rounded-tr-none"
-                        : "bg-white text-slate-700 border border-slate-200 rounded-tl-none"
+                        ? "bg-primary-600 text-white rounded-2xl rounded-tr-sm shadow-primary-600/20"
+                        : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-sm"
                     }`}
                   >
-                    {/* Render newlines properly */}
                     <div style={{ whiteSpace: "pre-wrap" }}>{msg.content}</div>
                   </div>
-                </div>
+                </motion.div>
               ))}
               
               {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white px-4 py-3 rounded-2xl rounded-tl-none border border-slate-200 flex items-center gap-2">
-                    <Loader2 size={16} className="animate-spin text-uii-blue-600" />
-                    <span className="text-xs text-slate-400">Sedang berpikir...</span>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                  <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-700 flex items-center gap-3 shadow-sm">
+                    <Loader2 size={16} className="animate-spin text-primary-500" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Menganalisis...</span>
                   </div>
-                </div>
+                </motion.div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
-            <div className="p-3 bg-white border-t border-slate-100">
-              <form onSubmit={handleSend} className="relative flex items-center gap-2">
+            <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 relative z-10">
+              <form onSubmit={handleSend} className="relative flex items-center">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Tanya tentang event atau inkubasi..."
-                  className="pr-12 py-3 rounded-xl border-slate-200 focus:ring-uii-blue-500 bg-slate-50"
+                  placeholder="Tanyakan sesuatu..."
+                  className="pr-14 py-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 text-sm shadow-inner"
                   autoFocus
                 />
                 <Button 
                   type="submit" 
                   size="sm" 
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-1.5 top-1.5 h-8 w-8 p-0 rounded-lg bg-uii-blue-600 hover:bg-uii-blue-700"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-xl bg-primary-600 hover:bg-primary-500 shadow-md transition-transform active:scale-95 disabled:bg-slate-300 dark:disabled:bg-slate-700"
                 >
-                  <Send size={14} />
+                  <Send size={16} className={input.trim() && !isLoading ? "text-white" : "text-slate-500"} />
                 </Button>
               </form>
-              <p className="text-[10px] text-center text-slate-400 mt-2">
+              <div className="flex items-center justify-center gap-1.5 mt-3 text-[10px] text-slate-400 font-medium">
+                <Sparkles size={10} className="text-accent-500" />
                 AI dapat membuat kesalahan. Cek kembali informasi penting.
-              </p>
+              </div>
             </div>
           </motion.div>
         )}
@@ -155,10 +158,11 @@ export default function GeminiChat() {
       {/* Floating Toggle Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.9 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="h-14 w-14 rounded-full bg-gradient-to-r from-uii-blue-600 to-uii-blue-500 shadow-xl shadow-uii-blue-600/30 flex items-center justify-center text-white border-2 border-white/20 relative z-50"
+        className="h-16 w-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 shadow-[0_0_30px_rgba(59,130,246,0.5)] flex items-center justify-center text-white border border-white/20 relative z-50 group"
       >
+        <div className="absolute inset-0 rounded-full bg-primary-400 opacity-0 group-hover:opacity-20 transition-opacity blur-md" />
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div
@@ -167,7 +171,7 @@ export default function GeminiChat() {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
             >
-              <X size={24} />
+              <X size={28} />
             </motion.div>
           ) : (
             <motion.div
@@ -176,14 +180,14 @@ export default function GeminiChat() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
             >
-              <MessageCircle size={28} className="fill-current" />
+              <MessageCircle size={32} className="fill-current" />
             </motion.div>
           )}
         </AnimatePresence>
         
         {/* Notification Dot (jika belum dibuka) */}
         {!isOpen && messages.length > 0 && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-bounce" />
+          <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900 shadow-md animate-pulse" />
         )}
       </motion.button>
     </div>

@@ -1,45 +1,133 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { HeroSection } from "@/lib/firestore/content";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, type: "spring", bounce: 0.4 } 
+  }
+};
+
+// Daftar gambar banner bergilir (Silakan ganti URL dengan gambar asli UII nanti)
+const bannerImages = [
+  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2000&auto=format&fit=crop", // Kampus / Mahasiswa
+  "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=2000&auto=format&fit=crop", // Kolaborasi / Startup
+  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop"  // Tech / Inovasi
+];
 
 export default function HeroRender({ data }: { data: HeroSection['data'] }) {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // Efek Auto-Slide Banner setiap 5 detik
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % bannerImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <section className="relative pt-36 pb-24 lg:pt-48 lg:pb-32 overflow-hidden bg-uii-blue-950">
+    <section className="relative pt-36 pb-24 md:pt-48 md:pb-40 overflow-hidden bg-slate-950 flex items-center min-h-[90vh]">
+      
+      {/* High-Tech Background Elements & Carousel */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] bg-uii-blue-600/20 rounded-[100%] blur-[120px] animate-pulse-slow" />
-        <div className="absolute bottom-0 left-0 w-[40vw] h-[40vw] bg-uii-blue-800/10 rounded-full blur-[80px] -translate-x-1/3 translate-y-1/3" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+        
+        {/* Image Slider dengan Animasi Crossfade */}
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImage}
+            src={bannerImages[currentImage]}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.3, scale: 1 }} // Opacity 0.3 agar teks tetap terbaca jelas
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover brightness-75 grayscale-[30%]"
+            alt={`Banner Simpul Tumbuh ${currentImage + 1}`}
+          />
+        </AnimatePresence>
+
+        {/* Jaring-jaring AI (Grid Pattern) */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.15]" />
+        
+        {/* Gradient Overlay untuk meredupkan gambar dan menyatukan dengan tema gelap */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--color-slate-950)_100%)]" />
+
+        {/* Glowing Orbs */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] bg-primary-600/30 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" />
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-8">
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-dark border border-white/10 text-uii-blue-100 text-xs md:text-sm font-medium backdrop-blur-md">
-            <span>{data.badge}</span>
-          </div>
+      <div className="container-tech relative z-10">
+        <motion.div 
+          className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Futuristic Badge */}
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark border border-white/20 text-xs md:text-sm font-medium shadow-lg">
+            <Sparkles size={16} className="text-accent-400 animate-pulse" />
+            <span className="text-slate-200">{data.badge}</span>
+          </motion.div>
           
-          <h1 className="font-uii text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] whitespace-pre-line">
+          {/* Main Headline */}
+          <motion.h1 variants={itemVariants} className="font-uii text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-[1.1] whitespace-pre-line drop-shadow-2xl">
             {data.title}
-          </h1>
+          </motion.h1>
           
-          <p className="text-base md:text-xl text-uii-blue-100/80 max-w-3xl mx-auto leading-relaxed font-light">
+          {/* Subtitle */}
+          <motion.p variants={itemVariants} className="text-lg md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed font-light drop-shadow-md">
             {data.subtitle}
-          </p>
+          </motion.p>
           
-          <div className="flex flex-col sm:flex-row items-center gap-4 pt-6">
-            <Link href="/programs">
-              <Button size="lg" className="w-full sm:w-auto gap-3 h-12 px-8 bg-uii-yellow-500 text-uii-blue-950 font-bold hover:bg-uii-yellow-400">
+          {/* Call to Actions */}
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-5 pt-8 w-full sm:w-auto">
+            <Link href="/unit-fungsional/ibisma" className="w-full sm:w-auto">
+              <Button size="lg" variant="primary" className="w-full sm:w-auto gap-3 text-base shadow-[0_0_20px_rgba(37,99,235,0.4)]">
                 {data.ctaPrimary} <ArrowRight size={18} />
               </Button>
             </Link>
-            <Link href="/news">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 border-uii-blue-700 text-uii-blue-100 hover:bg-uii-blue-800/50 hover:text-white backdrop-blur-sm">
+            <Link href="/news" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto gap-3 text-base border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
                 {data.ctaSecondary}
               </Button>
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
+
+      {/* Navigation Dots untuk Carousel */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        {bannerImages.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentImage(idx)}
+            aria-label={`Go to slide ${idx + 1}`}
+            className={`h-2.5 rounded-full transition-all duration-500 ease-out ${
+              idx === currentImage 
+                ? "w-10 bg-primary-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" 
+                : "w-2.5 bg-white/30 hover:bg-white/60"
+            }`}
+          />
+        ))}
+      </div>
+      
     </section>
   );
 }
