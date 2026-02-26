@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import GeminiChat from "@/components/features/GeminiChat"; // Import Chat Widget
+import GeminiChat from "@/components/features/GeminiChat";
 
 const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -11,7 +11,7 @@ const fontSans = Plus_Jakarta_Sans({
 });
 
 const fontUII = localFont({
-  src: "./fonts/UII-Font.ttf",
+  src: "./fonts/UII-Font.ttf", // <-- Ekstensi diubah menjadi huruf kecil agar dikenali oleh Next.js
   variable: "--font-uii",
   weight: "100 900",
 });
@@ -27,14 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Tambahkan scroll-smooth agar navigasi anchor link (seperti href="#apply") mulus
     <html lang="id" className="scroll-smooth">
-      <body 
-        className={`${fontSans.variable} ${fontUII.variable} antialiased font-sans bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-300`}
-      >
+      {/* Hapus hardcoded bg/text slate dan dark mode agar di-handle sepenuhnya oleh globals.css */}
+      <body className={`${fontSans.variable} ${fontUII.variable} antialiased font-sans transition-colors duration-400`}>
         <AuthProvider>
           {children}
-          <GeminiChat /> {/* Pasang widget di sini agar global */}
+          <GeminiChat />
         </AuthProvider>
       </body>
     </html>

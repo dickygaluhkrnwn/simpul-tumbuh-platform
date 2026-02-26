@@ -63,7 +63,7 @@ export default function GeminiChat() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end font-sans">
+    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end font-sans selection:bg-primary-500 selection:text-white">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -71,32 +71,36 @@ export default function GeminiChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, type: "spring", bounce: 0.4 }}
-            className="mb-6 w-[350px] md:w-[400px] h-[550px] bg-white dark:bg-slate-900 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden relative"
+            className="mb-6 w-[350px] md:w-[400px] h-[550px] glass-panel bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-slate-200/80 flex flex-col overflow-hidden relative"
           >
             {/* Background Glow */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-primary-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-accent-500/10 rounded-full blur-2xl pointer-events-none" />
 
             {/* Header */}
-            <div className="bg-slate-950 p-5 flex justify-between items-center text-white relative z-10 border-b border-slate-800 shadow-sm">
+            <div className="bg-white/60 p-5 flex justify-between items-center text-slate-900 relative z-10 border-b border-slate-200/60 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center border border-white/10 shadow-inner">
-                  <Bot size={20} className="text-white" />
+                <div className="w-10 h-10 bg-primary-50 border border-primary-100 rounded-xl flex items-center justify-center shadow-sm">
+                  <Bot size={22} className="text-primary-600" />
                 </div>
                 <div>
                   <h3 className="font-bold text-sm tracking-wide">Simpul AI Assistant</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
-                    <span className="text-[10px] text-slate-300 font-medium uppercase tracking-widest">Online & Siap</span>
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Online & Siap</span>
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white transition-colors">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-slate-500 hover:text-slate-700 transition-colors shadow-sm"
+              >
                 <Minimize2 size={18} />
               </button>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 p-5 overflow-y-auto bg-slate-50 dark:bg-slate-950/50 space-y-5 custom-scrollbar relative z-10">
+            <div className="flex-1 p-5 overflow-y-auto bg-slate-50/50 space-y-5 custom-scrollbar relative z-10">
               {messages.map((msg) => (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -107,8 +111,8 @@ export default function GeminiChat() {
                   <div
                     className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed shadow-sm font-medium ${
                       msg.role === "user"
-                        ? "bg-primary-600 text-white rounded-2xl rounded-tr-sm shadow-primary-600/20"
-                        : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-tl-sm"
+                        ? "bg-primary-600 text-white rounded-2xl rounded-tr-sm shadow-primary-500/20"
+                        : "bg-white text-slate-700 border border-slate-200/80 rounded-2xl rounded-tl-sm shadow-sm"
                     }`}
                   >
                     <div style={{ whiteSpace: "pre-wrap" }}>{msg.content}</div>
@@ -118,9 +122,9 @@ export default function GeminiChat() {
               
               {isLoading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                  <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-700 flex items-center gap-3 shadow-sm">
+                  <div className="bg-white px-4 py-3 rounded-2xl rounded-tl-sm border border-slate-200/80 flex items-center gap-3 shadow-sm">
                     <Loader2 size={16} className="animate-spin text-primary-500" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Menganalisis...</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Menganalisis...</span>
                   </div>
                 </motion.div>
               )}
@@ -128,26 +132,26 @@ export default function GeminiChat() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 relative z-10">
+            <div className="p-4 bg-white/80 border-t border-slate-200/60 relative z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
               <form onSubmit={handleSend} className="relative flex items-center">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Tanyakan sesuatu..."
-                  className="pr-14 py-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 text-sm shadow-inner"
+                  className="pr-14 py-6 rounded-2xl bg-white border-slate-200 focus:ring-primary-500/30 text-sm shadow-inner text-slate-800"
                   autoFocus
                 />
                 <Button 
                   type="submit" 
                   size="sm" 
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-xl bg-primary-600 hover:bg-primary-500 shadow-md transition-transform active:scale-95 disabled:bg-slate-300 dark:disabled:bg-slate-700"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-xl bg-primary-600 hover:bg-primary-500 shadow-md transition-transform active:scale-95 disabled:bg-slate-200 disabled:border-slate-300"
                 >
-                  <Send size={16} className={input.trim() && !isLoading ? "text-white" : "text-slate-500"} />
+                  <Send size={16} className={input.trim() && !isLoading ? "text-white" : "text-slate-400"} />
                 </Button>
               </form>
-              <div className="flex items-center justify-center gap-1.5 mt-3 text-[10px] text-slate-400 font-medium">
-                <Sparkles size={10} className="text-accent-500" />
+              <div className="flex items-center justify-center gap-1.5 mt-3 text-[10px] text-slate-500 font-medium">
+                <Sparkles size={12} className="text-accent-500" />
                 AI dapat membuat kesalahan. Cek kembali informasi penting.
               </div>
             </div>
@@ -160,9 +164,9 @@ export default function GeminiChat() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="h-16 w-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 shadow-[0_0_30px_rgba(59,130,246,0.5)] flex items-center justify-center text-white border border-white/20 relative z-50 group"
+        className="h-16 w-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 shadow-xl shadow-primary-500/30 flex items-center justify-center text-white border border-primary-400/50 relative z-50 group transition-shadow"
       >
-        <div className="absolute inset-0 rounded-full bg-primary-400 opacity-0 group-hover:opacity-20 transition-opacity blur-md" />
+        <div className="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
         <AnimatePresence mode="wait">
           {isOpen ? (
             <motion.div
@@ -187,7 +191,7 @@ export default function GeminiChat() {
         
         {/* Notification Dot (jika belum dibuka) */}
         {!isOpen && messages.length > 0 && (
-          <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900 shadow-md animate-pulse" />
+          <span className="absolute top-0 right-0 w-4 h-4 bg-rose-500 rounded-full border-2 border-white shadow-md animate-pulse" />
         )}
       </motion.button>
     </div>

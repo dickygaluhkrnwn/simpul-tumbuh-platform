@@ -7,15 +7,15 @@
   --font-uii: var(--font-uii, "Inter", sans-serif);
 
   /* --- COLOR PALETTE --- */
-  /* Primary Blues (Electric & Digital) */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6; /* Electric Blue - Tech Accent */
-  --color-primary-600: #2563eb;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  /* Primary Blues (Electric & Digital - Bisa ditimpa oleh Tema Formal) */
+  --color-primary-50: var(--theme-primary-50, #eff6ff);
+  --color-primary-100: var(--theme-primary-100, #dbeafe);
+  --color-primary-400: var(--theme-primary-400, #60a5fa);
+  --color-primary-500: var(--theme-primary-500, #3b82f6); /* Tech Accent */
+  --color-primary-600: var(--theme-primary-600, #2563eb);
+  --color-primary-800: var(--theme-primary-800, #1e40af);
+  --color-primary-900: var(--theme-primary-900, #1e3a8a);
+  --color-primary-950: var(--theme-primary-950, #172554);
 
   /* Accent Yellows (Cyber Gold / Neon) */
   --color-accent-300: #fde047;
@@ -23,14 +23,14 @@
   --color-accent-500: #eab308; /* Cyber Gold */
   --color-accent-600: #ca8a04;
 
-  /* Tech Neutrals (Deep Slate with Blue Undertone) */
+  /* Tech Neutrals */
   --color-slate-850: #172033;
   --color-slate-900: #0f172a;
-  --color-slate-950: #020617; /* Deepest Tech Background */
+  --color-slate-950: #020617; 
 
   /* Glowing Effects */
-  --color-glow-blue: rgba(59, 130, 246, 0.4);
-  --color-glow-gold: rgba(234, 179, 8, 0.4);
+  --color-glow-blue: var(--theme-glow-blue, rgba(59, 130, 246, 0.4));
+  --color-glow-gold: var(--theme-glow-gold, rgba(234, 179, 8, 0.4));
 
   /* --- ANIMATIONS --- */
   --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -65,12 +65,24 @@
     /* Default Base (Light Tech Theme) */
     --bg-base: #f8fafc;
     --text-base: #0f172a;
+    
+    /* Variable Warna Default Tech */
+    --theme-primary-500: #3b82f6; 
+    --theme-primary-600: #2563eb;
+    --theme-glow-blue: rgba(59, 130, 246, 0.4);
   }
 
-  .dark {
-    /* Dark Mode (Cyber Theme) */
-    --bg-base: #020617;
-    --text-base: #f8fafc;
+  .theme-formal {
+    /* Base Formal (Sangat Bersih & Akademik) */
+    --bg-base: #ffffff;
+    --text-base: #1e293b;
+    
+    /* Timpa warna utama menjadi Navy Blue UII */
+    --theme-primary-500: #1e3a8a; /* Deep Navy */
+    --theme-primary-600: #172554;
+    
+    /* Matikan efek glow di mode formal */
+    --theme-glow-blue: rgba(0, 0, 0, 0.05);
   }
 
   body {
@@ -80,13 +92,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 }
 
 /* --- UTILITIES & COMPONENT FOUNDATIONS --- */
 
-/* 1. Glassmorphism Modern */
 @utility glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
@@ -95,24 +106,21 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* 2. Glassmorphism Dark (Untuk Sidebar, Panel Admin, Hover Effects) */
 @utility glass-dark {
-  background: rgba(15, 23, 42, 0.7); /* Based on slate-900 */
+  background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(59, 130, 246, 0.2); /* Subtle blue border */
+  border: 1px solid rgba(59, 130, 246, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* 3. Glass Panel (Khusus untuk Card Startup / Berita) */
 @utility glass-panel {
   background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 1.25rem; /* Rounded modern */
+  border-radius: 1.25rem;
 }
 
-/* 4. Text Gradients (Lebih mencolok) */
 @utility text-gradient-primary {
   background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600));
   -webkit-background-clip: text;
@@ -127,14 +135,12 @@
   background-clip: text;
 }
 
-/* 5. Tech Background Pattern (Jaring-jaring halus) */
 @utility bg-grid-pattern {
   background-size: 40px 40px;
   background-image: linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
 }
 
-/* 6. Layout Container Custom */
 @utility container-tech {
   width: 100%;
   margin-inline: auto;

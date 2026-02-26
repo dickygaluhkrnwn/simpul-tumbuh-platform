@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Image as ImageIcon, UploadCloud, X, Loader2 } from "lucide-react";
+import { UploadCloud, X, Loader2 } from "lucide-react";
 import { uploadImage } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
@@ -54,17 +53,17 @@ export function ImageUpload({
   };
 
   return (
-    <div className="space-y-3 font-sans">
-      <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+    <div className="space-y-3 font-sans w-full">
+      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
         {label}
       </label>
       
       <div 
         className={cn(
-          "border-2 border-dashed rounded-2xl p-4 text-center relative group transition-all duration-300",
+          "border-2 border-dashed rounded-2xl p-4 text-center relative group transition-all duration-300 w-full",
           preview 
-            ? "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900" 
-            : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-primary-400 cursor-pointer"
+            ? "border-slate-200 bg-white shadow-sm" 
+            : "border-slate-300 bg-slate-50/50 hover:bg-slate-100 hover:border-primary-400 cursor-pointer"
         )}
         onClick={() => !preview && fileInputRef.current?.click()}
       >
@@ -78,7 +77,7 @@ export function ImageUpload({
         />
 
         {preview ? (
-          <div className="relative w-full h-48 md:h-56 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <div className="relative w-full h-48 md:h-56 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
             <img 
               src={preview} 
               alt="Preview" 
@@ -86,9 +85,9 @@ export function ImageUpload({
             />
             
             {isUploading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-900 dark:text-white bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-900 bg-white/40 backdrop-blur-sm">
                 <Loader2 className="animate-spin w-8 h-8 text-primary-500 mb-2" />
-                <span className="text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300">Mengunggah...</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-800">Mengunggah...</span>
               </div>
             )}
 
@@ -96,7 +95,7 @@ export function ImageUpload({
               <button 
                 type="button"
                 onClick={handleRemove}
-                className="absolute top-3 right-3 bg-slate-900/60 hover:bg-rose-600 text-white p-2 rounded-xl backdrop-blur-md shadow-lg transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+                className="absolute top-3 right-3 bg-white/90 hover:bg-rose-600 text-slate-700 hover:text-white p-2 rounded-xl backdrop-blur-md shadow-lg border border-slate-200/50 transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
                 title="Hapus Gambar"
               >
                 <X size={16} />
@@ -105,10 +104,10 @@ export function ImageUpload({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-10">
-            <div className="w-14 h-14 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 mb-4 group-hover:scale-110 group-hover:text-primary-500 group-hover:border-primary-500/50 transition-all duration-300">
+            <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-slate-200 flex items-center justify-center text-slate-400 mb-4 group-hover:scale-110 group-hover:text-primary-500 group-hover:border-primary-300 transition-all duration-300">
               <UploadCloud size={28} />
             </div>
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Klik untuk memilih gambar</p>
+            <p className="text-sm font-bold text-slate-700 mb-1">Klik untuk memilih gambar</p>
             <p className="text-xs font-medium text-slate-400">Format JPG atau PNG (Maks. 2MB)</p>
           </div>
         )}

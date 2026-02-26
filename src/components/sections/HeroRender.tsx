@@ -24,11 +24,11 @@ const itemVariants: Variants = {
   }
 };
 
-// Daftar gambar banner bergilir (Silakan ganti URL dengan gambar asli UII nanti)
+// Daftar gambar banner bergilir
 const bannerImages = [
-  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2000&auto=format&fit=crop", // Kampus / Mahasiswa
-  "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=2000&auto=format&fit=crop", // Kolaborasi / Startup
-  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop"  // Tech / Inovasi
+  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2000&auto=format&fit=crop", 
+  "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=2000&auto=format&fit=crop", 
+  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop"  
 ];
 
 export default function HeroRender({ data }: { data: HeroSection['data'] }) {
@@ -54,10 +54,10 @@ export default function HeroRender({ data }: { data: HeroSection['data'] }) {
             key={currentImage}
             src={bannerImages[currentImage]}
             initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 0.3, scale: 1 }} // Opacity 0.3 agar teks tetap terbaca jelas
+            animate={{ opacity: 0.35, scale: 1 }} // Sedikit dinaikkan opacity-nya agar gambar lebih terlihat
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full object-cover brightness-75 grayscale-[30%]"
+            className="absolute inset-0 w-full h-full object-cover brightness-75 grayscale-[20%]"
             alt={`Banner Simpul Tumbuh ${currentImage + 1}`}
           />
         </AnimatePresence>
@@ -65,12 +65,12 @@ export default function HeroRender({ data }: { data: HeroSection['data'] }) {
         {/* Jaring-jaring AI (Grid Pattern) */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.15]" />
         
-        {/* Gradient Overlay untuk meredupkan gambar dan menyatukan dengan tema gelap */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--color-slate-950)_100%)]" />
+        {/* Gradient Overlay untuk menyatukan gambar dengan tema gelap */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)] opacity-80" />
 
-        {/* Glowing Orbs */}
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] bg-primary-600/30 rounded-full blur-[120px] animate-pulse-glow pointer-events-none" />
+        {/* Glowing Orbs (Otomatis berubah warna & glow sesuai Tema Tech/Formal di globals.css) */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] bg-primary-600/30 rounded-full blur-[120px] animate-pulse-glow pointer-events-none transition-colors duration-500" />
       </div>
 
       <div className="container-tech relative z-10">
@@ -81,7 +81,7 @@ export default function HeroRender({ data }: { data: HeroSection['data'] }) {
           animate="visible"
         >
           {/* Futuristic Badge */}
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark border border-white/20 text-xs md:text-sm font-medium shadow-lg">
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark border border-white/10 text-xs md:text-sm font-medium shadow-lg backdrop-blur-md">
             <Sparkles size={16} className="text-accent-400 animate-pulse" />
             <span className="text-slate-200">{data.badge}</span>
           </motion.div>
@@ -92,19 +92,19 @@ export default function HeroRender({ data }: { data: HeroSection['data'] }) {
           </motion.h1>
           
           {/* Subtitle */}
-          <motion.p variants={itemVariants} className="text-lg md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed font-light drop-shadow-md">
+          <motion.p variants={itemVariants} className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light drop-shadow-md">
             {data.subtitle}
           </motion.p>
           
           {/* Call to Actions */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-5 pt-8 w-full sm:w-auto">
             <Link href="/unit-fungsional/ibisma" className="w-full sm:w-auto">
-              <Button size="lg" variant="primary" className="w-full sm:w-auto gap-3 text-base shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+              <Button size="lg" variant="primary" className="w-full sm:w-auto gap-3 text-base shadow-[0_0_20px_var(--theme-glow-blue)] transition-all hover:scale-105">
                 {data.ctaPrimary} <ArrowRight size={18} />
               </Button>
             </Link>
             <Link href="/news" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto gap-3 text-base border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto gap-3 text-base border-white/20 text-white hover:bg-white/10 backdrop-blur-sm transition-all hover:scale-105">
                 {data.ctaSecondary}
               </Button>
             </Link>
@@ -121,7 +121,7 @@ export default function HeroRender({ data }: { data: HeroSection['data'] }) {
             aria-label={`Go to slide ${idx + 1}`}
             className={`h-2.5 rounded-full transition-all duration-500 ease-out ${
               idx === currentImage 
-                ? "w-10 bg-primary-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" 
+                ? "w-10 bg-primary-500 shadow-[0_0_10px_var(--theme-glow-blue)]" 
                 : "w-2.5 bg-white/30 hover:bg-white/60"
             }`}
           />

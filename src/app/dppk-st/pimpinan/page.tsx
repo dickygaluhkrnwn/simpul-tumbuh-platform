@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer"; // <-- Import Footer
 import { motion, Variants } from "framer-motion";
 import { Mail, Briefcase, Award } from "lucide-react";
 
@@ -50,14 +51,20 @@ export default function PimpinanPage() {
   const divisionHeads = leaders.filter(l => !l.isDirector);
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-300">
+    <main className="min-h-screen relative selection:bg-accent-500 selection:text-slate-900 font-sans transition-colors duration-400 overflow-hidden">
       <Header />
 
+      {/* Elemen Dekorasi Latar Belakang Global */}
+      <div className="fixed inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none -z-20" />
+      <div className="fixed top-1/4 left-[-10%] w-[40vw] h-[40vw] bg-primary-500/5 rounded-full blur-[150px] pointer-events-none -z-10 mix-blend-multiply" />
+      <div className="fixed bottom-1/4 right-[-10%] w-[30vw] h-[30vw] bg-accent-500/5 rounded-full blur-[120px] pointer-events-none -z-10 mix-blend-multiply" />
+
       {/* Hero Section */}
-      <section className="relative pt-36 pb-20 md:pt-48 md:pb-24 overflow-hidden bg-slate-950">
+      <section className="relative pt-36 pb-20 md:pt-48 md:pb-24 overflow-hidden bg-slate-900 border-b border-slate-200/50">
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-          <div className="absolute inset-0 bg-grid-pattern opacity-[0.15]" />
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.1]" />
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] bg-primary-600/20 rounded-full blur-[120px] animate-pulse-glow" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
         </div>
 
         <div className="container-tech relative z-10 text-center">
@@ -67,7 +74,7 @@ export default function PimpinanPage() {
             transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary-500/10 text-primary-400 mb-6 border border-primary-500/20">
+            <div className="inline-flex items-center justify-center p-3 rounded-2xl glass-dark text-accent-400 mb-6 border border-white/10 shadow-lg">
               <Award size={28} />
             </div>
             <h1 className="font-uii text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-4 drop-shadow-lg">
@@ -84,11 +91,7 @@ export default function PimpinanPage() {
       </section>
 
       {/* Profil Section */}
-      <section className="py-20 md:py-32 relative overflow-hidden">
-        {/* Dekorasi Background */}
-        <div className="absolute top-1/4 left-0 w-72 h-72 bg-primary-500/5 rounded-full blur-[80px] -translate-x-1/2 pointer-events-none" />
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-accent-500/5 rounded-full blur-[100px] translate-x-1/3 pointer-events-none" />
-
+      <section className="py-20 md:py-32 relative">
         <div className="container-tech relative z-10">
           <motion.div
             variants={staggerContainer}
@@ -100,12 +103,12 @@ export default function PimpinanPage() {
             {/* DIREKTUR (Card Besar di Tengah) */}
             {director && (
               <motion.div variants={fadeUpVariant} className="flex justify-center">
-                <div className="group relative w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+                <div className="group relative w-full max-w-md glass-panel bg-white/70 border border-slate-200/80 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-400 to-primary-600 z-20" />
                   
                   {/* Image Container */}
-                  <div className="relative h-80 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10" />
+                  <div className="relative h-80 w-full overflow-hidden bg-slate-200">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10 opacity-80" />
                     <img 
                       src={director.image} 
                       alt={director.name}
@@ -120,14 +123,14 @@ export default function PimpinanPage() {
                   <div className="p-6 md:p-8 flex flex-col gap-6">
                     <div className="flex items-start gap-3">
                       <Briefcase className="w-5 h-5 text-primary-500 shrink-0 mt-1" />
-                      <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                      <p className="text-slate-700 font-medium leading-relaxed">
                         {director.role}
                       </p>
                     </div>
                     
                     <a 
                       href={`mailto:${director.email}`}
-                      className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-bold hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors border border-primary-100 dark:border-primary-800/50"
+                      className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-primary-50 text-primary-700 font-bold hover:bg-primary-100 hover:text-primary-800 transition-colors border border-primary-100"
                     >
                       <Mail size={18} />
                       {director.email}
@@ -140,12 +143,12 @@ export default function PimpinanPage() {
             {/* KEPALA DIVISI (2 Card Berdampingan) */}
             <motion.div variants={fadeUpVariant} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
               {divisionHeads.map((head, index) => (
-                <div key={index} className="group relative w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+                <div key={index} className="group relative w-full glass-panel bg-white/70 border border-slate-200/80 rounded-3xl shadow-lg hover:shadow-xl hover:shadow-accent-500/10 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-400 to-accent-600 z-20" />
                   
                   {/* Image Container */}
-                  <div className="relative h-72 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10" />
+                  <div className="relative h-72 w-full overflow-hidden bg-slate-200">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent z-10 opacity-80" />
                     <img 
                       src={head.image} 
                       alt={head.name}
@@ -160,14 +163,14 @@ export default function PimpinanPage() {
                   <div className="p-6 md:p-8 flex flex-col gap-6 h-full">
                     <div className="flex items-start gap-3 flex-grow">
                       <Briefcase className="w-5 h-5 text-accent-500 shrink-0 mt-1" />
-                      <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed text-sm md:text-base">
+                      <p className="text-slate-700 font-medium leading-relaxed text-sm md:text-base">
                         {head.role}
                       </p>
                     </div>
                     
                     <a 
                       href={`mailto:${head.email}`}
-                      className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-400 font-bold hover:bg-accent-100 dark:hover:bg-accent-900/40 transition-colors border border-accent-100 dark:border-accent-800/50 mt-auto"
+                      className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-accent-50 text-accent-700 font-bold hover:bg-accent-100 hover:text-accent-800 transition-colors border border-accent-100 mt-auto"
                     >
                       <Mail size={18} />
                       {head.email}
@@ -180,6 +183,9 @@ export default function PimpinanPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Footer ditambahkan di sini */}
+      <Footer />
     </main>
   );
 }

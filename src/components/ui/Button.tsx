@@ -15,14 +15,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, ...props }, ref) => {
     
     // Base style ditambahkan transisi warna yang lebih mulus dan rounded yang lebih modern (rounded-xl)
-    const baseStyles = "relative inline-flex items-center justify-center rounded-xl font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none overflow-hidden";
+    const baseStyles = "relative inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none overflow-hidden";
     
-    // Varian sekarang menggunakan warna tech dari globals.css dan efek glowing
+    // Varian disesuaikan dengan tema global (Tech/Formal) tanpa class dark mode
     const variants = {
-      primary: "bg-primary-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] border border-primary-500/50 focus:ring-primary-500",
+      primary: "bg-primary-600 text-white shadow-[0_0_15px_var(--theme-glow-blue)] hover:shadow-[0_0_25px_var(--theme-glow-blue)] border border-primary-500/50 focus:ring-primary-500",
       secondary: "bg-accent-500 text-slate-900 shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_25px_rgba(234,179,8,0.5)] border border-accent-400/50 focus:ring-accent-500",
-      outline: "glass text-slate-900 dark:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800/50 focus:ring-slate-400",
-      ghost: "bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300",
+      outline: "glass text-slate-800 hover:bg-slate-100/80 hover:text-primary-600 focus:ring-slate-400 border-slate-200/60",
+      ghost: "bg-transparent hover:bg-slate-100/80 text-slate-700 hover:text-primary-600",
     };
 
     const sizes = {
@@ -51,7 +51,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         
         {/* Shimmer effect overlay for primary and secondary variants */}
         {(variant === 'primary' || variant === 'secondary') && (
-          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
         )}
       </motion.button>
     );

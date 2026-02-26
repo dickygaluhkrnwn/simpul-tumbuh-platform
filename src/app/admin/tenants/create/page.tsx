@@ -6,7 +6,7 @@ import { createTenant } from "@/lib/firestore/tenants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import { ArrowLeft, Save, Building2, Settings } from "lucide-react";
+import { ArrowLeft, Save, Building2, Settings, User, Globe, Instagram } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CreateTenantPage() {
@@ -52,16 +52,18 @@ export default function CreateTenantPage() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-5xl mx-auto space-y-6 pb-20 font-sans"
+      className="max-w-6xl mx-auto space-y-6 pb-20 font-sans selection:bg-primary-500 selection:text-white"
     >
       {/* HEADER PAGE */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm">
-        <button onClick={() => router.back()} className="p-3 bg-slate-100 dark:bg-slate-800 hover:bg-primary-100 dark:hover:bg-primary-900/30 text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl transition-all w-max">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 glass-panel bg-white/70 p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-[80px] rounded-full pointer-events-none" />
+        
+        <button onClick={() => router.back()} className="relative z-10 p-3 bg-white hover:bg-primary-50 text-slate-600 hover:text-primary-600 border border-slate-200 rounded-xl shadow-sm transition-all w-max">
           <ArrowLeft size={20} />
         </button>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white font-uii">Tambah Startup Binaan</h1>
-          <p className="text-slate-500 dark:text-slate-400 font-medium text-sm mt-1">Masukkan data startup baru ke dalam ekosistem IBISMA UII.</p>
+        <div className="relative z-10">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 font-uii tracking-tight">Tambah Startup Binaan</h1>
+          <p className="text-slate-500 font-medium text-sm mt-1">Masukkan data startup baru ke dalam ekosistem IBISMA UII.</p>
         </div>
       </div>
 
@@ -69,42 +71,52 @@ export default function CreateTenantPage() {
         
         {/* Kolom Kiri: Form Utama */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-slate-900 p-6 md:p-10 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm space-y-8">
+          <div className="glass-panel bg-white/70 p-6 md:p-10 rounded-[2rem] border border-slate-200/80 shadow-sm space-y-8">
             
-            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="w-10 h-10 rounded-xl bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 flex items-center justify-center">
-                <Building2 size={20} />
+            <div className="flex items-center gap-4 border-b border-slate-200/80 pb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary-50 border border-primary-100 text-primary-600 flex items-center justify-center shadow-sm">
+                <Building2 size={24} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 dark:text-white">Profil Startup</h3>
+              <h3 className="text-2xl font-bold text-slate-900">Profil Startup</h3>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Startup</label>
-                <Input required name="name" placeholder="Contoh: GoJek KW" value={formData.name} onChange={handleChange} />
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Nama Startup</label>
+                <Input required name="name" placeholder="Contoh: GoJek KW" value={formData.name} onChange={handleChange} className="h-14 text-lg font-medium" />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Deskripsi Singkat</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Deskripsi Singkat</label>
                 <textarea 
                   name="description" 
                   required 
                   rows={4} 
-                  placeholder="Solusi apa yang ditawarkan?"
-                  className="w-full p-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                  placeholder="Solusi apa yang ditawarkan oleh startup ini?"
+                  className="w-full p-4 rounded-xl border border-slate-200 bg-white/80 text-sm text-slate-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all shadow-sm resize-none" 
                   value={formData.description} 
                   onChange={handleChange} 
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Founder</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2 ml-1">
+                    <User size={14} /> Nama Founder
+                  </label>
                   <Input required name="founder" placeholder="Nama Ketua Tim" value={formData.founder} onChange={handleChange} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Website (Opsional)</label>
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2 ml-1">
+                    <Globe size={14} /> Website (Opsional)
+                  </label>
                   <Input name="website" value={formData.website} onChange={handleChange} placeholder="https://..." />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2 ml-1">
+                    <Instagram size={14} /> Instagram (Opsional)
+                  </label>
+                  <Input name="instagram" value={formData.instagram} onChange={handleChange} placeholder="@username" />
                 </div>
               </div>
             </div>
@@ -114,13 +126,13 @@ export default function CreateTenantPage() {
 
         {/* Kolom Kanan: Sidebar Form */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm space-y-8 sticky top-24">
+          <div className="glass-panel bg-white/70 p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-sm space-y-8 sticky top-24">
             
-            <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+            <div className="flex items-center gap-3 border-b border-slate-200/80 pb-3">
+              <div className="w-10 h-10 rounded-xl bg-accent-50 border border-accent-100 text-accent-600 flex items-center justify-center shadow-sm">
                 <Settings size={20} />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 dark:text-white">Pengaturan</h3>
+              <h3 className="text-xl font-bold text-slate-900">Pengaturan</h3>
             </div>
 
             <ImageUpload 
@@ -131,10 +143,10 @@ export default function CreateTenantPage() {
             />
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kategori Bidang</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Kategori Bidang</label>
               <select 
                 name="category" 
-                className="w-full h-11 px-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white/80 text-sm text-slate-900 focus:ring-2 focus:ring-primary-500 outline-none shadow-sm font-semibold cursor-pointer" 
                 value={formData.category} 
                 onChange={handleChange}
               >
@@ -148,15 +160,15 @@ export default function CreateTenantPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Batch / Angkatan</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Batch / Angkatan</label>
               <Input required name="batch" value={formData.batch} onChange={handleChange} placeholder="Contoh: Batch 5 - 2025" />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status Inkubasi</label>
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Status Inkubasi</label>
               <select 
                 name="status" 
-                className="w-full h-11 px-4 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500 outline-none transition-all shadow-sm" 
+                className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white/80 text-sm text-slate-900 focus:ring-2 focus:ring-primary-500 outline-none shadow-sm font-semibold cursor-pointer" 
                 value={formData.status} 
                 onChange={handleChange}
               >
@@ -166,9 +178,9 @@ export default function CreateTenantPage() {
               </select>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-              <Button type="submit" variant="primary" className="w-full h-12 gap-2 shadow-lg" isLoading={loading}>
-                <Save size={18} /> Simpan Startup
+            <div className="pt-6 border-t border-slate-200/80">
+              <Button type="submit" variant="primary" className="w-full h-14 text-lg font-bold gap-2 shadow-lg shadow-primary-500/20" isLoading={loading}>
+                <Save size={20} /> Simpan Startup
               </Button>
             </div>
 

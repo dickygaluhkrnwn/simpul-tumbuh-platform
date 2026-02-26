@@ -17,9 +17,10 @@ const staggerContainer: Variants = {
 
 export default function AboutRender({ data }: { data: AboutSection['data'] }) {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden bg-slate-50 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60">
+    // Background diatur transparan agar otomatis mengikuti root body
+    <section className="py-24 md:py-32 relative overflow-hidden border-t border-slate-200/50">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary-500/5 rounded-[100%] blur-[120px] pointer-events-none" />
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none" />
 
       <div className="container-tech relative z-10">
         <motion.div 
@@ -31,39 +32,37 @@ export default function AboutRender({ data }: { data: AboutSection['data'] }) {
         >
           {/* Bagian 1: Profil Direktorat */}
           <motion.div variants={fadeUpVariant} className="text-center mb-20 md:mb-28">
-            <div className="inline-flex items-center justify-center p-4 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 mb-6 shadow-sm">
+            <div className="inline-flex items-center justify-center p-4 rounded-full bg-primary-50 text-primary-600 border border-primary-100 mb-6 shadow-sm">
               <Landmark size={32} />
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-uii mb-8 tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 font-uii mb-8 tracking-tight leading-tight">
               {data.title}
             </h2>
-            <p className="text-lg md:text-xl text-slate-800 dark:text-slate-300 leading-relaxed max-w-4xl mx-auto font-medium">
+            <p className="text-lg md:text-xl text-slate-700 leading-relaxed max-w-4xl mx-auto font-medium">
               {data.description}
             </p>
           </motion.div>
 
-          {/* Bagian 2: GITA Partners - CLASS DIPERBAIKI */}
+          {/* Bagian 2: GITA Partners - Diganti menjadi Glass Panel */}
           <motion.div 
             variants={fadeUpVariant} 
-            // Menggunakan background solid (bg-white / bg-slate-900) agar teks dijamin terbaca
-            className="p-8 md:p-12 lg:p-16 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl rounded-3xl relative overflow-hidden"
+            className="p-8 md:p-12 lg:p-16 border border-slate-200/60 glass-panel bg-white/60 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group"
           >
             {/* Dekorasi Background */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent-500/10 rounded-full blur-[60px]" />
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-500/10 rounded-full blur-[60px]" />
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent-500/10 rounded-full blur-[60px] group-hover:bg-accent-500/20 transition-colors duration-500" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-500/10 rounded-full blur-[60px] group-hover:bg-primary-500/20 transition-colors duration-500" />
             
             <div className="relative z-10">
-              <div className="flex flex-col md:flex-row md:items-center gap-5 mb-10 pb-8 border-b border-slate-200 dark:border-slate-800">
-                <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 inline-block">
+              <div className="flex flex-col md:flex-row md:items-center gap-5 mb-10 pb-8 border-b border-slate-200/60">
+                <div className="p-4 bg-white/80 rounded-2xl shadow-sm border border-slate-200/60 inline-block backdrop-blur-sm">
                   <Globe2 size={36} className="text-accent-500" />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
                   {data.gitaTitle}
                 </h3>
               </div>
               
-              {/* Teks diubah warnanya agar kontras tinggi: text-slate-800 di light mode, text-slate-200 di dark mode */}
-              <div className="space-y-6 text-slate-800 dark:text-slate-200 text-base md:text-lg leading-relaxed columns-1 md:columns-2 gap-10 font-medium">
+              <div className="space-y-6 text-slate-700 text-base md:text-lg leading-relaxed columns-1 md:columns-2 gap-10 font-medium">
                 {data.gitaDescription.map((paragraph, index) => (
                   <p key={index} className="break-inside-avoid-column mb-6">
                     {paragraph}
@@ -75,7 +74,7 @@ export default function AboutRender({ data }: { data: AboutSection['data'] }) {
 
           {/* Bagian 3: Disclaimer */}
           <motion.div variants={fadeUpVariant} className="mt-12">
-            <div className="flex gap-4 p-5 md:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400">
+            <div className="flex gap-4 p-5 md:p-6 rounded-2xl glass-panel bg-white/40 border border-slate-200/50 shadow-sm text-slate-600">
               <Info size={24} className="shrink-0 text-primary-500" />
               <p className="text-xs md:text-sm font-medium leading-relaxed">
                 {data.disclaimer}

@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/Button";
-import { Menu, X, Zap, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu, X, Zap, ChevronDown, Briefcase, Sparkles, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // --- STRUKTUR NAVIGASI ASLI SIMPUL TUMBUH ---
@@ -21,7 +20,7 @@ const navLinks = [
   },
   {
     name: "UNIT FUNGSIONAL",
-    href: "#", // Tetap ada href placeholder agar konsisten
+    href: "#",
     subItems: [
       { name: "Inkubator Bisnis - IBISMA UII", href: "/unit-fungsional/ibisma" },
       { name: "Akselerator Bisnis - PEIAB Angel", href: "/unit-fungsional/peiab-angel" },
@@ -47,9 +46,8 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [themeMode, setThemeMode] = useState<'tech' | 'formal'>('tech');
   
-  // State untuk melacak dropdown mana yang sedang terbuka di Mobile
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,20 +56,21 @@ export default function Header() {
     };
     window.addEventListener("scroll", handleScroll);
 
-    if (document.documentElement.classList.contains('dark')) {
-      setTheme('dark');
+    // Cek apakah mode formal aktif saat pertama kali load
+    if (document.documentElement.classList.contains('theme-formal')) {
+      setThemeMode('formal');
     }
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
+  const toggleThemeMode = () => {
+    const newMode = themeMode === 'tech' ? 'formal' : 'tech';
+    setThemeMode(newMode);
+    if (newMode === 'formal') {
+      document.documentElement.classList.add('theme-formal');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('theme-formal');
     }
   };
 
@@ -84,7 +83,7 @@ export default function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
         isScrolled
-          ? "py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm"
+          ? "py-3 bg-white/85 backdrop-blur-lg border-b border-slate-200/50 shadow-sm"
           : "py-6 bg-transparent"
       )}
     >
@@ -94,18 +93,22 @@ export default function Header() {
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="relative w-10 h-10 flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl shadow-lg shadow-primary-500/30 group-hover:shadow-primary-500/50 transition-all duration-300">
-              <Zap className="w-5 h-5 text-white fill-current" />
+              {themeMode === 'tech' ? (
+                <Zap className="w-5 h-5 text-white fill-current" />
+              ) : (
+                <Briefcase className="w-5 h-5 text-white" />
+              )}
             </div>
-            <div className="flex flex-col hidden sm:flex">
+            <div className="flex-col hidden sm:flex">
               <span className={cn(
                 "font-uii font-bold text-xl leading-none tracking-tight transition-colors duration-300",
-                isScrolled ? "text-slate-900 dark:text-white" : "text-white"
+                isScrolled ? "text-slate-900" : "text-white"
               )}>
                 Simpul Tumbuh
               </span>
               <span className={cn(
                 "text-[10px] font-bold tracking-[0.2em] uppercase mt-1 transition-colors duration-300",
-                isScrolled ? "text-primary-600 dark:text-primary-400" : "text-primary-300"
+                isScrolled ? "text-primary-600" : "text-primary-300"
               )}>
                 UII Innovation Lab
               </span>
@@ -116,25 +119,25 @@ export default function Header() {
           <nav className={cn(
             "hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-2xl backdrop-blur-sm border transition-colors duration-300",
             isScrolled 
-              ? "bg-slate-100/50 border-slate-200 dark:bg-slate-800/50 dark:border-slate-700" 
+              ? "bg-slate-100/50 border-slate-200" 
               : "bg-white/5 border-white/10"
           )}>
             {navLinks.map((link) => (
               <div key={link.name} className="relative group">
                 {link.subItems ? (
-                  // Menu dengan Dropdown & bisa diklik (Link)
                   <Link 
                     href={link.href || "#"} 
-                    className="flex items-center gap-1 cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-slate-300 group-hover:text-white group-hover:bg-white/10 data-[scrolled=true]:text-slate-600 data-[scrolled=true]:group-hover:text-primary-600 data-[scrolled=true]:group-hover:bg-white dark:data-[scrolled=true]:text-slate-300 dark:data-[scrolled=true]:group-hover:text-white dark:data-[scrolled=true]:group-hover:bg-slate-700/50" data-scrolled={isScrolled}
+                    className="flex items-center gap-1 cursor-pointer px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-slate-300 group-hover:text-white group-hover:bg-white/10 data-[scrolled=true]:text-slate-600 data-[scrolled=true]:group-hover:text-primary-600 data-[scrolled=true]:group-hover:bg-white" 
+                    data-scrolled={isScrolled}
                   >
                     {link.name}
                     <ChevronDown size={14} className="transition-transform duration-300 group-hover:rotate-180" />
                   </Link>
                 ) : (
-                  // Menu Biasa
                   <Link
                     href={link.href}
-                    className="block px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10 data-[scrolled=true]:text-slate-600 data-[scrolled=true]:hover:text-primary-600 data-[scrolled=true]:hover:bg-white dark:data-[scrolled=true]:text-slate-300 dark:data-[scrolled=true]:hover:text-white dark:data-[scrolled=true]:hover:bg-slate-700/50" data-scrolled={isScrolled}
+                    className="block px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10 data-[scrolled=true]:text-slate-600 data-[scrolled=true]:hover:text-primary-600 data-[scrolled=true]:hover:bg-white" 
+                    data-scrolled={isScrolled}
                   >
                     {link.name}
                   </Link>
@@ -143,12 +146,12 @@ export default function Header() {
                 {/* Dropdown Content (Desktop) */}
                 {link.subItems && (
                   <div className="absolute top-full left-0 mt-2 w-64 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-out z-50">
-                    <div className="p-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-900/10 dark:shadow-black/40 flex flex-col gap-1 relative before:absolute before:-top-2 before:left-6 before:w-4 before:h-4 before:bg-white dark:before:bg-slate-900 before:border-l before:border-t before:border-slate-200 dark:before:border-slate-800 before:rotate-45">
+                    <div className="p-2 rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-900/10 flex flex-col gap-1 relative before:absolute before:-top-2 before:left-6 before:w-4 before:h-4 before:bg-white before:border-l before:border-t before:border-slate-200 before:rotate-45">
                       {link.subItems.map((subItem) => (
                         <Link
                           key={subItem.name}
                           href={subItem.href}
-                          className="relative z-10 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                          className="relative z-10 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                         >
                           {subItem.name}
                         </Link>
@@ -163,40 +166,47 @@ export default function Header() {
           {/* Action Buttons (Desktop) */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
             <button
-              onClick={toggleTheme}
               className={cn(
-                "p-2.5 rounded-xl transition-all duration-300 backdrop-blur-sm border",
+                "p-2.5 rounded-xl transition-all duration-300 backdrop-blur-sm border flex items-center justify-center",
                 isScrolled
-                  ? "bg-slate-100/50 hover:bg-slate-200/50 border-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-700/50 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                  ? "bg-slate-100/50 hover:bg-slate-200/50 border-slate-200 text-slate-600"
                   : "bg-white/10 hover:bg-white/20 border-white/10 text-white"
               )}
-              aria-label="Toggle Dark Mode"
+              title="Pencarian"
             >
-              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+              <Search size={18} />
             </button>
 
-            <Link href="/auth/login">
-              <Button variant="primary" size="sm" className="hidden md:flex shadow-primary-500/30">
-                Masuk Area
-              </Button>
-            </Link>
+            <button
+              onClick={toggleThemeMode}
+              className={cn(
+                "p-2.5 rounded-xl transition-all duration-300 backdrop-blur-sm border flex items-center justify-center",
+                isScrolled
+                  ? "bg-slate-100/50 hover:bg-slate-200/50 border-slate-200 text-slate-600"
+                  : "bg-white/10 hover:bg-white/20 border-white/10 text-white"
+              )}
+              title={themeMode === 'tech' ? "Ganti ke Tema Formal" : "Ganti ke Tema Tech"}
+            >
+              {themeMode === 'tech' ? <Briefcase size={18} /> : <Sparkles size={18} />}
+            </button>
           </div>
 
           {/* Mobile Menu Toggle */}
           <div className="flex items-center gap-3 lg:hidden">
             <button
-              onClick={toggleTheme}
+              onClick={toggleThemeMode}
               className={cn(
-                "p-2 rounded-lg transition-colors",
-                isScrolled ? "text-slate-600 dark:text-slate-300" : "text-white/80 hover:text-white"
+                "p-2 rounded-lg transition-colors flex items-center justify-center",
+                isScrolled ? "text-slate-600" : "text-white/80 hover:text-white"
               )}
+              title={themeMode === 'tech' ? "Ganti ke Tema Formal" : "Ganti ke Tema Tech"}
             >
-              {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              {themeMode === 'tech' ? <Briefcase size={20} /> : <Sparkles size={20} />}
             </button>
             <button
               className={cn(
                 "p-2 transition-colors",
-                isScrolled ? "text-slate-600 dark:text-slate-300" : "text-white/80 hover:text-white"
+                isScrolled ? "text-slate-600" : "text-white/80 hover:text-white"
               )}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
@@ -208,15 +218,14 @@ export default function Header() {
 
       {/* Mobile Menu Dropdown (Accordion Style) */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-2 shadow-xl animate-in slide-in-from-top-2 max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-t border-slate-200 p-6 flex flex-col gap-2 shadow-xl animate-in slide-in-from-top-2 max-h-[80vh] overflow-y-auto">
           {navLinks.map((link) => (
             <div key={link.name} className="flex flex-col">
               {link.subItems ? (
-                // Accordion Header (Teks jadi tautan, Tombol panah jadi pembuka Accordion)
-                <div className="flex items-center justify-between rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <div className="flex items-center justify-between rounded-xl hover:bg-slate-100 transition-colors">
                   <Link
                     href={link.href || "#"}
-                    className="text-slate-700 dark:text-slate-200 font-bold py-3 px-4 flex-grow"
+                    className="text-slate-700 font-bold py-3 px-4 flex-grow"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -226,28 +235,26 @@ export default function Header() {
                     className="p-3 mr-1"
                     aria-label={`Toggle ${link.name} submenu`}
                   >
-                    <ChevronDown size={18} className={cn("transition-transform duration-300 text-slate-500 dark:text-slate-400", mobileDropdownOpen === link.name ? "rotate-180 text-primary-500 dark:text-primary-400" : "")} />
+                    <ChevronDown size={18} className={cn("transition-transform duration-300 text-slate-500", mobileDropdownOpen === link.name ? "rotate-180 text-primary-500" : "")} />
                   </button>
                 </div>
               ) : (
-                // Regular Link
                 <Link
                   href={link.href}
-                  className="text-slate-700 dark:text-slate-200 font-bold py-3 px-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="text-slate-700 font-bold py-3 px-4 rounded-xl hover:bg-slate-100 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               )}
 
-              {/* Accordion Content */}
               {link.subItems && mobileDropdownOpen === link.name && (
-                <div className="flex flex-col gap-1 pl-4 pr-2 py-2 mt-1 border-l-2 border-primary-100 dark:border-primary-900/50 ml-4 animate-in slide-in-from-top-1 fade-in">
+                <div className="flex flex-col gap-1 pl-4 pr-2 py-2 mt-1 border-l-2 border-primary-100 ml-4 animate-in slide-in-from-top-1 fade-in">
                   {link.subItems.map((subItem) => (
                     <Link
                       key={subItem.name}
                       href={subItem.href}
-                      className="py-2.5 px-4 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                      className="py-2.5 px-4 rounded-lg text-sm font-medium text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {subItem.name}
@@ -258,10 +265,15 @@ export default function Header() {
             </div>
           ))}
           
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
-            <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button variant="primary" className="w-full">Masuk Area</Button>
-            </Link>
+          <div className="pt-4 mt-4 border-t border-slate-100 relative">
+            <input 
+              type="text" 
+              placeholder="Cari sesuatu..." 
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-4 pr-12 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+            />
+            <button className="absolute right-2 top-[26px] p-2 text-slate-400 hover:text-primary-500 transition-colors">
+              <Search size={18} />
+            </button>
           </div>
         </div>
       )}

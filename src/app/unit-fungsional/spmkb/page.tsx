@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 import { 
   ShieldAlert, Users, Globe, Target, 
   Activity, ArrowRight, Menu, X, 
-  BookOpen, Rocket, GraduationCap, Map
+  BookOpen, Rocket, GraduationCap
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/layout/Footer"; 
 
 const fadeUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -23,6 +24,14 @@ const staggerContainer: Variants = {
     transition: { staggerChildren: 0.15 }
   }
 };
+
+// --- DATA GAMBAR BANNER ---
+const bannerImages = [
+  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2000&auto=format&fit=crop", 
+  "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=2000&auto=format&fit=crop", 
+  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=2000&auto=format&fit=crop"
+];
 
 // --- HEADER KHUSUS SPMKB (MICRO-SITE HEADER) ---
 const spmkbNavLinks = [
@@ -50,7 +59,7 @@ function SpmkbHeader() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
         isScrolled
-          ? "bg-slate-950/90 backdrop-blur-lg border-b border-slate-800 shadow-xl"
+          ? "bg-slate-900/90 backdrop-blur-lg border-b border-slate-800/50 shadow-xl"
           : "bg-transparent py-2"
       )}
     >
@@ -109,7 +118,7 @@ function SpmkbHeader() {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-slate-950 border-t border-slate-800 p-6 flex flex-col gap-2 shadow-xl animate-in slide-in-from-top-2">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 p-6 flex flex-col gap-2 shadow-xl animate-in slide-in-from-top-2">
           {spmkbNavLinks.map((link) => (
             <Link
               key={link.name}
@@ -135,6 +144,16 @@ function SpmkbHeader() {
 
 // --- MAIN PAGE COMPONENT ---
 export default function SpmkbPage() {
+  const [currentBanner, setCurrentBanner] = useState(0);
+
+  // Auto Slider Banner Timer
+  useEffect(() => {
+    const bannerTimer = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % bannerImages.length);
+    }, 6000); 
+    return () => clearInterval(bannerTimer);
+  }, []);
+
   const misiList = [
     { text: "Menjadi center of excellence (simpul) bagi kegiatan-kegiatan bertema kebencanaan di Universitas Islam Indonesia.", icon: Target },
     { text: "Menjadi pusat IPTEKS yang berbasis pada keunggulan UII sebagai pusat pengembangan ilmu pengetahuan serta sumber daya manusia.", icon: BookOpen },
@@ -142,7 +161,6 @@ export default function SpmkbPage() {
     { text: "Mencapai rekognisi ilmiah kelas dunia di bidang kebencanaan, serta menghasilkan produk baik ilmu pengetahuan, teknologi, maupun produk inovasi yang berbasis demand.", icon: Globe }
   ];
 
-  // Data dengan tambahan foto placeholder
   const dewanPengarah = [
     { name: "Prof. Fathul Wahid., S.T., M.Sc., Ph.D.", role: "Rektor", dept: "Informatika", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop" },
     { name: "Dr. Drs. Imam Djati Widodo., M.Eng. Sc.", role: "Wakil Rektor Bidang I", dept: "Teknik Industri", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop" },
@@ -198,67 +216,94 @@ export default function SpmkbPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-300">
+    <main className="min-h-screen relative selection:bg-amber-500 selection:text-white font-sans transition-colors duration-400 overflow-hidden">
+      
+      {/* Background Orbs Global (Amber/Orange Tint) */}
+      <div className="fixed inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none -z-20" />
+      <div className="fixed top-1/3 left-[-10%] w-[30vw] h-[30vw] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none -z-10 mix-blend-multiply" />
+      <div className="fixed bottom-1/4 right-[-10%] w-[30vw] h-[30vw] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none -z-10 mix-blend-multiply" />
+      
       <SpmkbHeader />
 
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-36 pb-24 md:pt-48 md:pb-40 overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 z-0 bg-slate-950">
-          <img 
-            src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?q=80&w=2000&auto=format&fit=crop" 
-            alt="SPMKB Background" 
-            className="w-full h-full object-cover opacity-20 brightness-50 grayscale-[20%]"
+      {/* --- FULL-WIDTH SLIDER BANNER TOP --- */}
+      <section className="relative w-full h-[50vh] md:h-[65vh] overflow-hidden bg-slate-900 border-b border-slate-200/50 mt-20">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentBanner}
+            src={bannerImages[currentBanner]}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.6, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt={`Banner SPMKB ${currentBanner + 1}`}
           />
-          {/* Overlay Gelap Super Pekat */}
-          <div className="absolute inset-0 bg-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-          
-          {/* Efek Glow Amber */}
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-amber-600/20 rounded-full blur-[120px] pointer-events-none" />
+        </AnimatePresence>
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]" />
+
+        <div className="absolute bottom-12 md:bottom-20 left-0 w-full z-10">
+          <div className="container-tech">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="max-w-4xl"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/20 text-xs md:text-sm font-bold text-white tracking-widest uppercase mb-6 shadow-sm backdrop-blur-md">
+                <Activity size={16} className="text-amber-400" /> SPMKB/BUiLD
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold text-white font-uii tracking-tight mb-4 drop-shadow-lg leading-tight">
+                Simpul Pemberdayaan Masyarakat untuk Ketangguhan Bencana
+              </h1>
+            </motion.div>
+          </div>
         </div>
 
-        <div className="container-tech relative z-10">
-          <motion.div 
-            initial="hidden" animate="visible" variants={staggerContainer}
-            className="max-w-4xl"
-          >
-            <motion.div variants={fadeUpVariant} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 text-sm font-bold tracking-widest uppercase mb-6 shadow-lg">
-              <Activity size={16} /> Research & Excellence Center
-            </motion.div>
-            
-            <motion.h1 variants={fadeUpVariant} className="text-4xl md:text-5xl lg:text-7xl font-bold font-uii leading-tight mb-6 drop-shadow-2xl">
-              Simpul Pemberdayaan Masyarakat untuk <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Ketangguhan Bencana</span>
-            </motion.h1>
-            
-            <motion.p variants={fadeUpVariant} className="text-lg md:text-xl text-slate-200 mb-10 max-w-3xl font-medium drop-shadow-xl leading-relaxed">
-              Hadir untuk meningkatkan dan menguatkan kolaborasi penelitian di bidang kebencanaan dengan melibatkan sivitas akademika UII dan masyarakat pada level nasional hingga internasional.
-            </motion.p>
-          </motion.div>
+        {/* Navigation Dots */}
+        <div className="absolute bottom-8 right-8 z-20 flex gap-2">
+          {bannerImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentBanner(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={cn(
+                "h-2 rounded-full transition-all duration-500 shadow-sm",
+                idx === currentBanner ? "w-8 bg-amber-500" : "w-2 bg-white/50 hover:bg-white"
+              )}
+            />
+          ))}
         </div>
       </section>
 
       {/* 2. TENTANG SPMKB */}
-      <section className="py-20 md:py-32 relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="container-tech">
+      <section className="py-20 md:py-32 relative">
+        <div className="container-tech relative z-10">
           <motion.div 
             variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
-            className="max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
-            <motion.div variants={fadeUpVariant} className="prose prose-lg dark:prose-invert text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-none text-justify">
-              <p>
-                Simpul Pemberdayaan Masyarakat untuk Ketangguhan Bencana, Universitas Islam Indonesia (SPMKB – UII) hadir dengan tujuan meningkatkan dan menguatkan kolaborasi penelitian di bidang kebencanaan dengan melibatkan seluruh sivitas akademika UII dan masyarakat sekitar, bukan hanya pada level nasional, tapi juga internasional, agar hasilnya bisa dirasakan oleh masyarakat lebih luas. 
-              </p>
-              <p>
-                Lebih spesifik lagi, SPMKB diharapkan menjadi simpul penghubung dan pusat koordinasi bersama antar unit atau pusat studi kebencanaan di UII agar lebih masif kontribusi yang diberikan dan bisa mengoptimalkan langkah-langkah diseminasi. 
-              </p>
-              <p>
-                Harapannya SPMKB bisa menjadi <strong>Pusat Unggulan Ipteks Perguruan Tinggi (PUI-PT)</strong> dengan sumbangan besar yang bisa berdampak pada peningkatan peringkat universitas dan rekognisi di dunia seperti dalam pemeringkatan World University Ranking. Proposal ini memiliki fokus pada penelitian bidang ketangguhan bencana yang diharapkan bisa meningkatkan inovasi dan peran serta dalam memecahkan permasalahan kebencanaan sehingga tercipta masyarakat Indonesia yang siap sedia menghadapi bencana.
-              </p>
-              <div className="p-6 bg-amber-50 dark:bg-amber-900/10 border-l-4 border-amber-500 mt-8 rounded-r-2xl">
-                <p className="m-0 text-amber-900 dark:text-amber-100 font-semibold">
-                  Dengan pengalaman yang panjang dalam penelitian kebencanaan dan kolaborasi internasional, SPMKB mengembangkan kegiatan berpusat pada tiga ranah: <span className="text-amber-600 dark:text-amber-400">Academic Excellence</span>, <span className="text-amber-600 dark:text-amber-400">Komersialisasi & Pemanfaatan Riset</span>, dan <span className="text-amber-600 dark:text-amber-400">Capacity Building</span>.
+            <motion.div variants={fadeUpVariant} className="glass-panel bg-white/70 border border-slate-200/80 p-8 md:p-12 lg:p-16 rounded-3xl shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[60px] pointer-events-none" />
+              
+              <div className="prose prose-lg max-w-none text-slate-700 font-medium leading-relaxed text-justify relative z-10">
+                <p className="mb-6">
+                  Simpul Pemberdayaan Masyarakat untuk Ketangguhan Bencana, Universitas Islam Indonesia (SPMKB – UII) hadir dengan tujuan meningkatkan dan menguatkan kolaborasi penelitian di bidang kebencanaan dengan melibatkan seluruh sivitas akademika UII dan masyarakat sekitar, bukan hanya pada level nasional, tapi juga internasional, agar hasilnya bisa dirasakan oleh masyarakat lebih luas. 
                 </p>
+                <p className="mb-6">
+                  Lebih spesifik lagi, SPMKB diharapkan menjadi simpul penghubung dan pusat koordinasi bersama antar unit atau pusat studi kebencanaan di UII agar lebih masif kontribusi yang diberikan dan bisa mengoptimalkan langkah-langkah diseminasi. 
+                </p>
+                <p className="mb-8">
+                  Lebih dari itu, harapannya SPMKB bisa menjadi <strong>Pusat Unggulan Ipteks Perguruan Tinggi (PUI-PT)</strong> dengan sumbangan besar yang bisa berdampak pada peningkatan peringkat universitas dan rekognisi di dunia seperti dalam pemeringkatan World University Ranking. Proposal ini memiliki fokus pada penelitian bidang ketangguhan bencana yang diharapkan bisa meningkatkan inovasi dan peran serta dalam memecahkan permasalahan kebencanaan sehingga tercipta masyarakat Indonesia yang siap sedia menghadapi bencana yang bisa datang kapan saja. 
+                </p>
+                
+                <div className="p-6 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-2xl shadow-sm">
+                  <p className="m-0 text-slate-800 font-semibold leading-snug">
+                    Dengan pengalaman yang panjang dalam penelitian kebencanaan dan kolaborasi internasional, SPMKB akan mengembangkan kegiatan penelitian kebencanaan yang berpusat pada peningkatan partisipasi penelitian, pengembangan kapasitas penelitian, peningkatan kerjasama penelitian, dan optimalisasi diseminasi hasil penelitian. Secara garis besar kegiatan berkisar dalam tiga ranah; <span className="text-amber-600">academic excellence</span>, <span className="text-amber-600">komersialisasi dan pemanfaatan riset</span>, dan <span className="text-amber-600">capacity building</span>.
+                  </p>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -266,21 +311,26 @@ export default function SpmkbPage() {
       </section>
 
       {/* 3. VISI & MISI */}
-      <section className="py-20 md:py-32 bg-slate-50 dark:bg-slate-950 relative">
+      <section className="py-20 md:py-32 relative border-y border-slate-200/50 bg-slate-50/50">
         <div className="container-tech relative z-10">
           <motion.div
             variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
             className="max-w-5xl mx-auto space-y-16"
           >
+            <div className="text-center mb-8">
+               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 font-uii tracking-tight">Visi dan Misi</h2>
+            </div>
+
             {/* Visi */}
-            <motion.div variants={fadeUpVariant} className="relative bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 md:p-16 lg:p-20 text-center shadow-2xl overflow-hidden">
-              <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-amber-500/20 blur-[100px] pointer-events-none" />
+            <motion.div variants={fadeUpVariant} className="relative glass-panel bg-white/80 border border-amber-100/50 rounded-[2.5rem] p-10 md:p-16 lg:p-20 text-center shadow-xl overflow-hidden">
+              <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-amber-500/10 blur-[100px] pointer-events-none" />
               
               <div className="relative z-10">
-                <Target size={56} className="mx-auto text-amber-500 mb-8" />
-                <h3 className="text-sm font-bold text-amber-500 tracking-[0.2em] uppercase mb-6">Visi Kami</h3>
-                <p className="text-2xl md:text-3xl font-semibold text-white leading-relaxed max-w-4xl mx-auto font-uii italic">
+                <h3 className="text-sm font-bold text-amber-600 tracking-[0.2em] uppercase mb-6 flex justify-center items-center gap-2">
+                  <Target size={18} /> Visi
+                </h3>
+                <p className="text-2xl md:text-3xl font-semibold text-slate-900 leading-relaxed max-w-4xl mx-auto font-uii text-justify md:text-center">
                   "Menjadi simpul pemberdayaan masyarakat untuk mencapai ketangguhan bencana yang berakar kuat (values), menjulang tinggi (innovation), berbuah lebat (benefits) dan diakui secara nasional maupun internasional (recognition)."
                 </p>
               </div>
@@ -288,18 +338,17 @@ export default function SpmkbPage() {
 
             {/* Misi */}
             <motion.div variants={fadeUpVariant}>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-10 text-center uppercase tracking-widest text-sm text-amber-600 dark:text-amber-500">
-                Misi Kami
+              <h3 className="text-sm font-bold text-amber-600 tracking-[0.2em] uppercase mb-8 text-center flex justify-center items-center gap-2">
+                <BookOpen size={18} /> Misi
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {misiList.map((misi, index) => {
-                  const Icon = misi.icon;
                   return (
-                    <div key={index} className="flex gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                      <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-500 rounded-2xl flex items-center justify-center shrink-0">
-                        <Icon size={28} />
+                    <div key={index} className="flex flex-col sm:flex-row gap-6 glass-panel bg-white/70 border border-slate-200/80 p-8 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all duration-300">
+                      <div className="w-14 h-14 bg-amber-50 text-amber-600 border border-amber-100 rounded-2xl flex items-center justify-center shrink-0 shadow-sm font-bold text-xl">
+                        {index + 1}
                       </div>
-                      <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                      <p className="text-slate-700 font-medium leading-relaxed text-justify sm:text-left">
                         {misi.text}
                       </p>
                     </div>
@@ -311,39 +360,37 @@ export default function SpmkbPage() {
         </div>
       </section>
 
-      {/* 4. STRUKTUR ORGANISASI (REVISED - POHON HIERARKI) */}
-      <section className="py-20 md:py-32 relative bg-slate-100 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
-        <div className="absolute right-0 top-1/4 w-64 h-64 bg-amber-500/5 blur-3xl rounded-full pointer-events-none" />
+      {/* 4. STRUKTUR ORGANISASI (HIERARKI) */}
+      <section className="py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute right-0 top-1/4 w-64 h-64 bg-amber-500/10 blur-3xl rounded-full pointer-events-none" />
+        <div className="absolute left-0 bottom-1/4 w-64 h-64 bg-orange-500/10 blur-3xl rounded-full pointer-events-none" />
         
         <div className="container-tech relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16 relative z-20">
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-uii mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 font-uii mb-6 tracking-tight">
               Struktur Organisasi
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 font-medium">
-              Hierarki kepengurusan Simpul Pemberdayaan Masyarakat untuk Ketangguhan Bencana UII.
-            </p>
           </div>
 
           <motion.div 
             variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
             className="relative w-full max-w-6xl mx-auto flex flex-col items-center"
           >
-            {/* Garis Vertikal Utama (Trunk) - Disembunyikan di mobile agar tidak berantakan */}
-            <div className="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-amber-200 dark:bg-amber-800/50 z-0" />
+            {/* Garis Vertikal Utama (Trunk) */}
+            <div className="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-slate-200 z-0" />
 
             {/* LEVEL 1: Dewan Pengarah */}
             <motion.div variants={fadeUpVariant} className="relative z-10 w-full mb-16 md:mb-24 flex flex-col items-center">
-              <div className="bg-amber-500 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+              <div className="bg-amber-500 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-lg shadow-amber-500/30">
                 Dewan Pengarah
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
                 {dewanPengarah.map((person, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 rounded-2xl shadow-sm flex flex-col items-center text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                    <img src={person.image} alt={person.name} className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-amber-50 dark:border-slate-800" />
-                    <span className="text-[10px] font-bold text-amber-600 dark:text-amber-500 mb-1 uppercase tracking-wider">{person.role}</span>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1 leading-snug">{person.name}</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{person.dept}</p>
+                  <div key={idx} className="glass-panel bg-white/80 border border-slate-200/80 p-5 rounded-2xl shadow-sm flex flex-col items-center text-center hover:shadow-md hover:border-amber-300 hover:-translate-y-1 transition-all duration-300">
+                    <img src={person.image} alt={person.name} className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-amber-50 shadow-sm" />
+                    <span className="text-[10px] font-bold text-amber-600 mb-1 uppercase tracking-wider">{person.role}</span>
+                    <h4 className="text-sm font-bold text-slate-900 mb-1 leading-snug">{person.name}</h4>
+                    <p className="text-xs text-slate-500 font-medium">{person.dept}</p>
                   </div>
                 ))}
               </div>
@@ -351,20 +398,20 @@ export default function SpmkbPage() {
 
             {/* LEVEL 2: Pimpinan */}
             <motion.div variants={fadeUpVariant} className="relative z-10 w-full mb-16 md:mb-24 flex flex-col items-center">
-              <div className="bg-amber-500 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+              <div className="bg-amber-400 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-md shadow-amber-400/30">
                 Pimpinan
               </div>
               
               <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 w-full max-w-3xl relative">
                 {/* Garis horizontal bercabang untuk Pimpinan di Desktop */}
-                <div className="hidden md:block absolute top-10 left-1/4 right-1/4 h-0.5 bg-amber-200 dark:bg-amber-800/50 -z-10" />
+                <div className="hidden md:block absolute top-10 left-1/4 right-1/4 h-0.5 bg-slate-200 -z-10" />
 
                 {pimpinan.map((person, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900 border-2 border-amber-400/50 dark:border-amber-600/50 p-6 rounded-3xl shadow-lg flex flex-col items-center text-center w-full md:w-72 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                    <img src={person.image} alt={person.name} className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-amber-100 dark:border-slate-800 shadow-inner" />
-                    <span className="text-xs font-bold text-amber-600 dark:text-amber-500 mb-2 uppercase tracking-widest">{person.role}</span>
-                    <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1 leading-snug">{person.name}</h4>
-                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{person.dept}</p>
+                  <div key={idx} className="glass-panel bg-white/90 border-2 border-amber-400/50 p-6 rounded-3xl shadow-lg flex flex-col items-center text-center w-full md:w-72 hover:shadow-xl hover:border-amber-400 hover:-translate-y-2 transition-all duration-300">
+                    <img src={person.image} alt={person.name} className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-amber-50 shadow-sm" />
+                    <span className="text-xs font-bold text-amber-600 mb-2 uppercase tracking-widest">{person.role}</span>
+                    <h4 className="text-base font-bold text-slate-900 mb-1 leading-snug">{person.name}</h4>
+                    <p className="text-sm font-medium text-slate-500">{person.dept}</p>
                   </div>
                 ))}
               </div>
@@ -372,15 +419,15 @@ export default function SpmkbPage() {
 
             {/* LEVEL 3: Anggota */}
             <motion.div variants={fadeUpVariant} className="relative z-10 w-full flex flex-col items-center">
-              <div className="bg-slate-800 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-md">
+              <div className="glass-dark border border-slate-700 text-white px-8 py-2.5 rounded-full font-bold uppercase tracking-widest text-sm mb-10 shadow-md">
                 Anggota
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 w-full">
                 {anggota.map((person, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm flex flex-col items-center text-center hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md transition-all duration-300">
-                    <img src={person.image} alt={person.name} className="w-16 h-16 rounded-full object-cover mb-3 border-2 border-slate-100 dark:border-slate-800" />
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1 leading-tight">{person.name}</h4>
-                    <p className="text-[10px] font-medium text-amber-600 dark:text-amber-500">{person.dept}</p>
+                  <div key={idx} className="glass-panel bg-white/60 border border-slate-200/80 p-4 rounded-2xl shadow-sm flex flex-col items-center text-center hover:border-amber-300 hover:shadow-md transition-all duration-300">
+                    <img src={person.image} alt={person.name} className="w-16 h-16 rounded-full object-cover mb-3 border-2 border-slate-100 shadow-sm" />
+                    <h4 className="text-xs font-bold text-slate-900 mb-1 leading-tight">{person.name}</h4>
+                    <p className="text-[10px] font-medium text-amber-600">{person.dept}</p>
                   </div>
                 ))}
               </div>
@@ -391,15 +438,12 @@ export default function SpmkbPage() {
       </section>
 
       {/* 5. ROADMAP */}
-      <section className="py-20 md:py-32 bg-slate-50 dark:bg-slate-950 relative overflow-hidden">
+      <section className="py-20 md:py-32 relative overflow-hidden border-t border-slate-200/50 bg-slate-50/50">
         <div className="container-tech relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-uii mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 font-uii mb-6 tracking-tight">
               Roadmap
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 font-medium">
-              Peta jalan pengembangan riset dan kegiatan SPMKB UII.
-            </p>
           </div>
 
           <motion.div 
@@ -407,7 +451,7 @@ export default function SpmkbPage() {
             className="relative max-w-5xl mx-auto"
           >
             {/* Connecting Line untuk Desktop */}
-            <div className="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 z-0" />
+            <div className="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0" />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-8">
               {roadmap.map((item, idx) => {
@@ -415,19 +459,19 @@ export default function SpmkbPage() {
                 return (
                   <motion.div key={idx} variants={fadeUpVariant} className="relative z-10 flex flex-col items-center text-center group">
                     <div className="mb-6 flex flex-col items-center">
-                      <div className="w-20 h-20 bg-white dark:bg-slate-900 border-4 border-amber-500 rounded-full flex items-center justify-center text-amber-500 shadow-xl group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 z-10">
+                      <div className="w-20 h-20 bg-white border-4 border-amber-500 rounded-full flex items-center justify-center text-amber-500 shadow-lg group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 z-10">
                         <Icon size={32} />
                       </div>
                     </div>
                     
-                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl shadow-lg w-full h-full hover:-translate-y-2 transition-transform duration-300 relative">
-                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-500 rounded-t-3xl" />
-                      <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-bold tracking-widest mb-4">
+                    <div className="glass-panel bg-white/80 border border-slate-200/80 p-8 rounded-3xl shadow-sm w-full h-full hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-500" />
+                      <span className="inline-block px-4 py-1.5 rounded-full bg-amber-50 border border-amber-100 text-amber-600 text-sm font-bold tracking-widest mb-4">
                         {item.year}
                       </span>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
-                      <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase">{item.subtitle}</p>
-                      <p className="text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">{item.title}</h3>
+                      <p className="text-sm font-bold text-slate-500 mb-4 uppercase tracking-wide">{item.subtitle}</p>
+                      <p className="text-slate-600 font-medium leading-relaxed text-justify">
                         {item.desc}
                       </p>
                     </div>
@@ -439,6 +483,8 @@ export default function SpmkbPage() {
         </div>
       </section>
 
+      {/* Tambahkan Footer Global */}
+      <Footer />
     </main>
   );
 }

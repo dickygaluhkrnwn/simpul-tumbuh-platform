@@ -54,10 +54,10 @@ export default function AdminDashboard() {
   }, []);
 
   const statCards = [
-    { label: "Total Pengguna", value: stats.totalUsers, icon: Users, color: "text-primary-500", bg: "bg-primary-500/10 border-primary-500/20" },
-    { label: "Event Aktif", value: stats.activeEvents, icon: Calendar, color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20" },
-    { label: "Tenant Binaan", value: stats.totalTenants, icon: Rocket, color: "text-accent-500", bg: "bg-accent-500/10 border-accent-500/20" },
-    { label: "Berita Terbit", value: stats.totalNews, icon: Newspaper, color: "text-rose-500", bg: "bg-rose-500/10 border-rose-500/20" },
+    { label: "Total Pengguna", value: stats.totalUsers, icon: Users, color: "text-blue-600", bg: "bg-blue-50 border-blue-100" },
+    { label: "Event Aktif", value: stats.activeEvents, icon: Calendar, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100" },
+    { label: "Tenant Binaan", value: stats.totalTenants, icon: Rocket, color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
+    { label: "Berita Terbit", value: stats.totalNews, icon: Newspaper, color: "text-rose-600", bg: "bg-rose-50 border-rose-100" },
   ];
 
   return (
@@ -67,10 +67,11 @@ export default function AdminDashboard() {
       variants={staggerContainer}
       className="space-y-8 font-sans pb-20"
     >
-      <motion.div variants={fadeUpVariant} className="flex flex-col gap-2 bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-[80px] rounded-full pointer-events-none" />
-        <h1 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white font-uii relative z-10">Admin Overview</h1>
-        <p className="text-slate-500 dark:text-slate-400 font-medium relative z-10">Pantau kinerja ekosistem Simpul Tumbuh secara real-time.</p>
+      {/* Header Admin */}
+      <motion.div variants={fadeUpVariant} className="flex flex-col gap-2 glass-panel bg-white/70 p-6 md:p-10 rounded-[2.5rem] border border-slate-200/80 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 blur-[80px] rounded-full pointer-events-none" />
+        <h1 className="text-3xl md:text-5xl font-bold text-slate-900 font-uii relative z-10 tracking-tight">Admin Overview</h1>
+        <p className="text-slate-600 font-medium relative z-10 text-lg">Pantau kinerja ekosistem Simpul Tumbuh secara real-time.</p>
       </motion.div>
 
       {/* Stats Grid */}
@@ -79,24 +80,24 @@ export default function AdminDashboard() {
           <motion.div 
             key={idx} 
             variants={fadeUpVariant}
-            className="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+            className="group glass-panel bg-white/70 p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
           >
             <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -mr-16 -mt-16 opacity-50 transition-colors ${stat.bg.split(' ')[0]}`} />
             
             <div className="flex items-center justify-between mb-6 relative z-10">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-inner ${stat.bg}`}>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-sm ${stat.bg}`}>
                 <stat.icon size={26} className={stat.color} />
               </div>
-              <span className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-full border border-emerald-100 dark:border-emerald-800/50">
+              <span className="flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
                 +12% <ArrowUpRight size={14} className="ml-1" />
               </span>
             </div>
             
             <div className="relative z-10">
-              <p className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider mb-1">{stat.label}</p>
-              <p className="text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <p className="text-slate-500 text-sm font-bold uppercase tracking-wider mb-2">{stat.label}</p>
+              <p className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
                 {loading ? (
-                  <span className="inline-block w-16 h-8 bg-slate-200 dark:bg-slate-800 rounded animate-pulse" />
+                  <span className="inline-block w-16 h-10 bg-slate-200 rounded-lg animate-pulse" />
                 ) : (
                   stat.value
                 )}
@@ -110,36 +111,36 @@ export default function AdminDashboard() {
       <motion.div variants={staggerContainer} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Main Chart Area */}
-        <motion.div variants={fadeUpVariant} className="lg:col-span-2 bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm min-h-[400px] flex flex-col justify-center items-center text-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-          <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-3xl flex items-center justify-center mb-6 text-primary-500 shadow-inner group-hover:scale-110 transition-transform duration-500 relative z-10">
-            <TrendingUp size={36} />
+        <motion.div variants={fadeUpVariant} className="lg:col-span-2 glass-panel bg-white/70 p-8 md:p-12 rounded-[2.5rem] border border-slate-200/80 shadow-sm min-h-[400px] flex flex-col justify-center items-center text-center relative overflow-hidden group hover:shadow-md transition-shadow">
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
+          <div className="w-24 h-24 bg-primary-50 border border-primary-100 rounded-[2rem] flex items-center justify-center mb-6 text-primary-500 shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 relative z-10">
+            <TrendingUp size={40} />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 relative z-10">Analitik Pertumbuhan</h3>
-          <p className="text-slate-500 dark:text-slate-400 font-medium max-w-sm relative z-10">Grafik pendaftaran event, tren pengguna baru, dan statistik inkubasi akan divisualisasikan di sini pada pembaruan mendatang.</p>
+          <h3 className="text-2xl font-bold text-slate-900 mb-3 relative z-10">Analitik Pertumbuhan</h3>
+          <p className="text-slate-600 font-medium max-w-sm relative z-10 leading-relaxed">Grafik pendaftaran event, tren pengguna baru, dan statistik inkubasi akan divisualisasikan di sini pada pembaruan mendatang.</p>
         </motion.div>
 
         {/* Recent Activity */}
-        <motion.div variants={fadeUpVariant} className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-          <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
-            <div className="p-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl">
-              <Activity size={20} />
+        <motion.div variants={fadeUpVariant} className="glass-panel bg-white/70 p-8 md:p-10 rounded-[2.5rem] border border-slate-200/80 shadow-sm relative overflow-hidden">
+          <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-200/80">
+            <div className="p-3 bg-primary-50 border border-primary-100 text-primary-600 rounded-2xl shadow-sm">
+              <Activity size={24} />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Aktivitas Terbaru</h3>
+            <h3 className="text-xl font-bold text-slate-900">Aktivitas Terbaru</h3>
           </div>
           
-          <div className="space-y-6 relative z-10">
+          <div className="space-y-8 relative z-10">
             {/* Connecting Line */}
-            <div className="absolute left-[11px] top-2 bottom-4 w-0.5 bg-slate-100 dark:bg-slate-800 -z-10" />
+            <div className="absolute left-[15px] top-2 bottom-4 w-0.5 bg-slate-200 -z-10" />
             
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex gap-5 group cursor-default">
-                <div className="w-6 h-6 rounded-full bg-white dark:bg-slate-900 border-4 border-primary-100 dark:border-primary-900/50 flex items-center justify-center flex-shrink-0 group-hover:border-primary-500 transition-colors">
-                  <div className="w-1.5 h-1.5 bg-primary-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div key={i} className="flex gap-6 group cursor-default">
+                <div className="w-8 h-8 rounded-full bg-white border-4 border-slate-100 flex items-center justify-center flex-shrink-0 group-hover:border-primary-200 transition-colors shadow-sm">
+                  <div className="w-2 h-2 bg-slate-300 rounded-full group-hover:bg-primary-500 transition-colors" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-800 dark:text-slate-200 font-semibold mb-0.5">User baru mendaftar di sistem</p>
-                  <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{i * 2} jam yang lalu</p>
+                  <p className="text-base text-slate-800 font-bold mb-1">User baru mendaftar di sistem</p>
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{i * 2} jam yang lalu</p>
                 </div>
               </div>
             ))}
