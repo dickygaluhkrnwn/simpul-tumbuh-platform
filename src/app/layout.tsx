@@ -11,7 +11,7 @@ const fontSans = Plus_Jakarta_Sans({
 });
 
 const fontUII = localFont({
-  src: "./fonts/UII-Font.ttf", // <-- Ekstensi diubah menjadi huruf kecil agar dikenali oleh Next.js
+  src: "./fonts/UII-Font.TTF", // <-- Ekstensi diubah menjadi huruf besar (.TTF) menyesuaikan Vercel/GitHub
   variable: "--font-uii",
   weight: "100 900",
 });
